@@ -1,0 +1,12 @@
+.button {
+ text-align: center;
+ background-color:ghostwhite;
+ margin: 8px 4px;
+ font-size: 30px;
+}
+
+#map {
+  border: thin solid black;
+  height: 500px;
+  width: 500px;
+}
