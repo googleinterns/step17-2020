@@ -69,19 +69,13 @@ function fetchMarkers() {
  *  The link leads to the coffee shop page which contains
  *  individual coffee shop information
  */
-function createMarkerForDisplay(markers) {
+function createMarkerForDisplay(shop) {
   const marker =
-    new google.maps.Marker({position: {lat: markers[0], lng: markers[1]}, map: map, title: markers[2]});
-  const infoWindow = new google.maps.InfoWindow({content: '<a href=coffeeshop.html>'});
+    new google.maps.Marker({position: {lat: shop[0], lng: shop[1]}, map: map, title: shop[2]});
+  const infoWindow = new google.maps.InfoWindow({content: '<a href=coffeeshop.html>' + shop[2] + '</a>'});
   marker.addListener('click', () => {
     infoWindow.open(map, marker);
     map.setZoom(14);
-    map.setCenter(LatLng(markers[0], markers[1]));
+    map.setCenter(LatLng(shop[0], shop[1]));
   });
-}
-
-function createCoffeeShopPage(shopName){
-  document.title = shopName;
-
-  return containerDiv;
 }
