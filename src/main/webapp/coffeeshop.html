@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Coffee Shop Ratings</title>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="review.js"></script>
+</head>
+<body>
+  <a href="index.html" class="button">Home</a>
+  <a href="user.html" class="button">User</a>
+  <a href="store.html" class="button">Stores</a>
+  
+  <h1>Coffee Shop Ratings</h1>
+  <div id="chart-container"></div>
+
+  <h2>Comments</h2>
+  <form action="/make-comment" method="POST">
+  <textarea name="text-input"></textarea>
+  <br>
+  <input type="submit"/>
+  </form>
+  <br>
+    <button onclick="loadComments()">Click here to see comments</button>
+    <div id="task-list"></div>
+</body>
+</html>
