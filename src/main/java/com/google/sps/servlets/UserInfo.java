@@ -23,22 +23,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/get-login-info")
-public class UserStatus extends HttpServlet {
+@WebServlet("/get-email")
+public class UserInfo extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-    boolean isLoggedIn;
-
     UserService userService = UserServiceFactory.getUserService();
-    if (userService.isUserLoggedIn()) {
-      isLoggedIn = true;
-    } else {
-      isLoggedIn = false;
-    }
+    String EMAIL = userService.getCurrentUser().getEmail();
+
     Gson gson = new Gson();
-    String json = gson.toJson(isLoggedIn);
+    String json = gson.toJson(EMAIL);
     response.getWriter().println(json);
   }
 }

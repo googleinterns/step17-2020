@@ -31,6 +31,7 @@ public class LoginServlet extends HttpServlet {
     boolean isLoggedIn = userService.isUserLoggedIn();
 
     if (isLoggedIn) {
+      System.out.println("logged in");
       String userEmail = userService.getCurrentUser().getEmail();
       String redirectUrlAfterLogOut = "/";
       String logoutUrl = userService.createLogoutURL(redirectUrlAfterLogOut);
@@ -38,6 +39,7 @@ public class LoginServlet extends HttpServlet {
       response.getWriter().println("<p>Hello " + userEmail + "!</p>");
       response.getWriter().println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
     } else {
+      System.out.println("not logged in");
       String redirectUrlAfterLogIn = "/";
       String loginUrl = userService.createLoginURL(redirectUrlAfterLogIn);
 
