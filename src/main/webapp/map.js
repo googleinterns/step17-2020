@@ -5,12 +5,16 @@ var userPos;
 
 /** Creates a map that shows all coffee shops around the user. */
 function createMap() {
+  // Set default location at new york city
   var newyork = new google.maps.LatLng(40.7128, -74.0060);
+  // Infowindow for to handle error in get user location
   infoWindow = new google.maps.InfoWindow();
+  // Global infowindow for coffee shop
   shopInfo = new google.maps.InfoWindow();
+
   map = new google.maps.Map(
     document.getElementById('map'),
-    {center: newyork, zoom: 13});
+    {center: newyork, zoom: 14});
 
   // Try HTML5 geolocation to get user location.
   if (navigator.geolocation) {
@@ -65,16 +69,16 @@ function createMarker(place) {
     map: map,
     position: place.geometry.location
   });
-	// const shopInfo = new google.maps.InfoWindow({
-  // content: '<a href=coffeeshop.html>' + place.name + '</a>'});
   marker.addListener('click', () => {
     shopInfo.close();
     shopInfo.setContent('<a href=coffeeshop.html>' + place.name + '</a>');
+    localStorage.setItem("shopName", place.name);
+    localStorage.setItem("address", place.formatted_address);
     shopInfo.open(map, marker);
   });
 }
 
 function getShopName() {
-  var h1 = document.getElementById('title');
-  h1.innerHTML = place.name
+  document.getElementById('title').innerHTML = localStorage.getItem("shopName");
+  document.getElementById('address').innerHTML = localStorage.getItem("address");
 }
