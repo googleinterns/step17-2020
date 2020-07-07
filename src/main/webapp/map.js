@@ -7,6 +7,7 @@ var userPos;
 function createMap() {
   // Set default location at new york city
   var newyork = new google.maps.LatLng(40.7128, -74.0060);
+  
   // Infowindow for to handle error in get user location
   infoWindow = new google.maps.InfoWindow();
   // Global infowindow for coffee shop
@@ -58,7 +59,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, userPos) {
 function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     for (var i = 0; i < results.length; i++) {
-      // var place = results[i];
       createMarker(results[i]);
     }
   }
@@ -72,6 +72,8 @@ function createMarker(place) {
   marker.addListener('click', () => {
     shopInfo.close();
     shopInfo.setContent('<a href=coffeeshop.html>' + place.name + '</a>');
+    // Save place name and address in local storage
+    // to display in the coffeeshop page
     localStorage.setItem("shopName", place.name);
     localStorage.setItem("address", place.formatted_address);
     shopInfo.open(map, marker);
