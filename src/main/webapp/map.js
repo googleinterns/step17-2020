@@ -7,15 +7,14 @@ var userPos;
 function createMap() {
   // Set default location at new york city
   var newyork = new google.maps.LatLng(40.7128, -74.0060);
+  map = new google.maps.Map(
+    document.getElementById('map'),
+    {center: newyork, zoom: 14});
   
   // Infowindow for to handle error in get user location
   infoWindow = new google.maps.InfoWindow();
   // Global infowindow for coffee shop
   shopInfo = new google.maps.InfoWindow();
-
-  map = new google.maps.Map(
-    document.getElementById('map'),
-    {center: newyork, zoom: 14});
 
   // Try HTML5 geolocation to get user location.
   if (navigator.geolocation) {
