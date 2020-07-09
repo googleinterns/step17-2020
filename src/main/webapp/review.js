@@ -17,27 +17,27 @@ google.charts.setOnLoadCallback(drawChart);
 
 // Creates a chart and adds it to the page
 function drawChart() {
+    fetch('/store-rating').then(response => response.json())
+  .then((votes) => {
     const data = new google.visualization.DataTable();
     data.addColumn('string', 'Rating');
     data.addColumn('number', 'Votes');
-    data.addRows([
-          ['Excellent', 33],
-          ['Good', 19],
-          ['Average', 10],
-          ['Bad', 6],
-          ['Terrible', 3]
-        ]);
-
+    Object.keys(votes).forEach((rating) => {
+      data.addRow([rating, votes[rating]]);
+    });
+ 
     const options = {
       'title': 'Store Ratings',
       'width':600,
       'height':500
     };
-
+ 
     const chart = new google.visualization.BarChart(
         document.getElementById('chart-container'));
     chart.draw(data, options);
+    });
 }
+
 
 // Adds comments to the page
 function loadComments() 

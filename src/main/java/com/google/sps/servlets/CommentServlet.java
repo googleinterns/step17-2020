@@ -70,7 +70,7 @@ public class CommentServlet extends HttpServlet {
     DatastoreService savedComments = DatastoreServiceFactory.getDatastoreService();
     savedComments.put(taskEntity);
 
-    response.sendRedirect("/index.html");
+    response.sendRedirect("/coffeeshop.html");
   }
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {

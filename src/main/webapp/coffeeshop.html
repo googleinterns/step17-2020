@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <title>Coffee Shop Ratings</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="review.js"></script>
     <script src="map.js"></script>
+    <script src="script.js"></script>
   </head>
-  <body onload=getShopName();>
+  <body onload="loadComments()">
     <a href="index.html" class="button">Home</a>
     <a href="user.html" class="button">User</a>
     <a href="store.html" class="button">Stores</a>
@@ -17,13 +19,34 @@
     <div id="chart-container"></div>
 
     <h2>Comments</h2>
+ 
     <form action="/make-comment" method="POST">
     <textarea name="text-input"></textarea>
-    <br>
     <input type="submit"/>
+    </form><br>
+ 
+    <p>Rate this store:</p>
+    <form action="/store-rating" method="POST">
+    <select name="store-rating">
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1</option>
+    </select>
+    <input type="submit"/><br>
     </form>
-    <br>
-    <button onclick="loadComments()">Click here to see comments</button>
+
+    <!-- TODO: RATE DRINKS,SHOW THEIR RATINGS -->
+    <form action="/drink-rating" method="POST">
+      <p>Rate your drink:</p>
+      <textarea name="drink-rating">Drink, Rating</textarea>
+      <br/><br/>
+      <input type="submit" />
+    </form>
+ 
     <div id="task-list"></div>
+    <div id="content"></div>
+
   </body>
 </html>
