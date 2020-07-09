@@ -35,14 +35,25 @@
     </select>
     <input type="submit"/><br>
     </form>
+    <br/><br/>
 
     <!-- TODO: RATE DRINKS,SHOW THEIR RATINGS -->
     <form action="/drink-rating" method="POST">
+      <p>Enter your drink below:</p>
+      <textarea name="drink"></textarea>
+
       <p>Rate your drink:</p>
-      <textarea name="drink-rating">Drink, Rating</textarea>
-      <br/><br/>
+      <select name="drink-rating">
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1</option>
+      </select>
       <input type="submit" />
     </form>
+    <button onclick="loadRatings()">Click here to see ratings</button>
+    <ul id="rating"></ul>
  
     <div id="task-list"></div>
     <div id="content"></div>
