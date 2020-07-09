@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Coffee Shop Ratings</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script src="review.js"></script>
-  <script src="map.js"></script>
-</head>
-<body onload=getShopName();>
-  <a href="index.html" class="button">Home</a>
-  <a href="user.html" class="button">User</a>
-  <a href="store.html" class="button">Stores</a>
+  <head>
+    <title>Coffee Shop Ratings</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="review.js"></script>
+    <script src="map.js"></script>
+  </head>
+  <body onload=getShopName();>
+    <a href="index.html" class="button">Home</a>
+    <a href="user.html" class="button">User</a>
+    <a href="store.html" class="button">Stores</a>
 
-  <h1 id='title'></h1>
-  <h3 id='address'></h3>
-  <div id="chart-container"></div>
+    <h1 id='title'></h1>
+    <h3 id='address'></h3>
+    <div id="chart-container"></div>
 
-  <h2>Comments</h2>
-  <form action="/make-comment" method="POST">
-  <textarea name="text-input"></textarea>
-  <br>
-  <input type="submit"/>
-  </form>
-  <br>
+    <h2>Comments</h2>
+    <form action="/make-comment" method="POST">
+    <textarea name="text-input"></textarea>
+    <br>
+    <input type="submit"/>
+    </form>
+    <br>
     <button onclick="loadComments()">Click here to see comments</button>
     <div id="task-list"></div>
-</body>
+  </body>
 </html>
