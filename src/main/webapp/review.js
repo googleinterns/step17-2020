@@ -87,3 +87,28 @@ function deleteTask(task) {
   fetch('/delete-task', {method: 'POST', body: params});
 }
 
+// TODO: WRITE FUNCTION TO FETCH DRINKS AND SHOW THE NAME AND
+function loadRatings() {
+  fetch('/drink-rating').then(response => response.json()).then((drinks) => {
+
+    const ratingListElement = document.getElementById('rating');
+
+    drinks.forEach((drink) => 
+    {
+      ratingListElement.appendChild(createListElement(drink));
+    })
+
+  });
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(drink) {
+  const ratingElement = document.createElement('li');
+  ratingElement.className = 'drink';
+
+  const drinkElement = document.createElement('span');
+  drinkElement.innerText = drink.ratingString;
+
+  ratingElement.appendChild(drinkElement);
+  return ratingElement;
+}
