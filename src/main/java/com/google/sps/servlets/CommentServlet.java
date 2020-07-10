@@ -32,17 +32,12 @@ public class CommentServlet extends HttpServlet {
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    List<Comment> comments = CommentDatabase.getCommentByStore(getParameter(request, "store", ""));
-    System.out.println(comments);
-
-    // for (Entity entity : results.asIterable()) {
-    //   long id = entity.getKey().getId();
-    //   long timestamp = (long) entity.getProperty("timestamp");
-    //   String comment = (String) entity.getProperty("comment");
-
-    //   Task task = new Task(id, timestamp, comment);
-    //   tasks.add(task);
-    // }
+    List<Comment> comments;
+    if (getParameter(request, "store", "").isEmpty()) {
+      comments = CommentDatabase.getCommentByEmail(getParameter(request, "email", ""));
+    } else {
+      comments = CommentDatabase.getCommentByStore(getParameter(request, "store", ""));
+    }
 
     Gson gson = new Gson();
 
@@ -52,16 +47,14 @@ public class CommentServlet extends HttpServlet {
 
   // This method takes input from the comment box and stores it with the rest of the comments
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println(getParameter(request, "drink", ""));
-    System.out.println(getParameter(request, "rating", ""));
     String drink = getParameter(request, "drink", "");
     drink = drink.toLowerCase();
     long rating = Integer.parseInt(getParameter(request, "rating", ""));
     String content = getParameter(request, "content", "");
     String store = getParameter(request, "store", "");
+    String email = getParameter(request, "email", "");
 
-    Comment comment = CommentDatabase.createComment(rating, drink, content, store);
-    System.out.printf("%s %s\n", comment.getDrink(), comment.getContent());
+    Comment comment = CommentDatabase.createComment(rating, drink, content, store, email);
 
     // response.sendRedirect("/coffeeshop.html");
   }
