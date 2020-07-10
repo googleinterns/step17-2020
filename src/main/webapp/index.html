@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Capstone Prototype</title>
+    <title>Capstone MVP</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="determineLogin()" id= "background">
 
     <a href="index.html" class="button">Home</a>
     <a href="user.html" class="button">User</a>
@@ -14,7 +14,9 @@
     <h1>About TYD Coffee</h1>
     
      <div> Welcome To TYDCoffee! </div>
-     <button> Login </button>
+      <div id="form"></div>
+      <div id="login-container"></div>
+      <div id="EMAIL"></div>
      <br><br>
 
     <div> Here at TYDCoffee, we have created a platform for users to leave reviews on their favorite store's drinks! </div> 

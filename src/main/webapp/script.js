@@ -7,10 +7,8 @@ function determineLogin() {
     form.action='/login';
     const button = document.createElement('button');
     if (!isLoggedIn) {
-      textElement.innerText = "Please log in to view this page";
       button.innerHTML = "Login";
     } else {
-      textElement.innerText = "You're logged in!";
       displayEmail();
       button.innerHTML = "Logout";
     }
