@@ -9,7 +9,7 @@
     <script src="map.js"></script>
     <script src="script.js"></script>
   </head>
-  <body onload="loadComments()">
+  <body onload="loadStoreInfo()">
     <a href="index.html" class="button">Home</a>
     <a href="user.html" class="button">User</a>
     <a href="store.html" class="button">Stores</a>
@@ -19,11 +19,6 @@
     <div id="chart-container"></div>
 
     <h2>Comments</h2>
- 
-    <form action="/make-comment" method="POST">
-    <textarea name="text-input"></textarea>
-    <input type="submit"/>
-    </form><br>
  
     <p>Rate this store:</p>
     <form action="/store-rating" method="POST">
@@ -39,22 +34,24 @@
     <br/><br/>
 
     <!-- TODO: RATE DRINKS,SHOW THEIR RATINGS -->
-    <form action="/drink-rating" method="POST">
-      <p>Enter your drink below:</p>
-      <textarea name="drink"></textarea>
+    <!-- <form id="comment" onsubmit="storeComment();"> -->
+    <p>Enter your drink below:</p>
+    <textarea name="drink" id="drink"></textarea>
+    <p>Enter your comment on the drink:</p>
+    <textarea name="content" id="content"></textarea>
 
-      <p>Rate your drink:</p>
-      <select name="drink-rating">
-        <option value="5">5</option>
-        <option value="4">4</option>
-        <option value="3">3</option>
-        <option value="2">2</option>
-        <option value="1">1</option>
-      </select>
-      <input type="submit" />
-    </form>
-    <button onclick="loadRatings()">Click here to see ratings</button>
-    <ul id="rating"></ul>
+    <p>Rate your drink:</p>
+    <select name="drink-rating" id="rating">
+    <option value="5">5</option>
+    <option value="4">4</option>
+    <option value="3">3</option>
+    <option value="2">2</option>
+    <option value="1">1</option>
+    </select>
+    <button id="comment" onclick="storeComment();">Submit</button>
+    <!-- </form> -->
+    <button onclick="loadRatings();">Click here to see ratings</button>
+    <ul id="comment-list"></ul>
  
     <div id="task-list"></div>
     <div id="content"></div>

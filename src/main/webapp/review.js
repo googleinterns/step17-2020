@@ -40,9 +40,11 @@ function drawChart() {
 
 
 // Adds comments to the page
-function loadComments() 
+function loadStoreInfo() 
 {
-  fetch('/make-comment').then(response => response.json()).then((tasks) => 
+  document.getElementById('title').innerHTML = localStorage.getItem("shopName");
+  document.getElementById('address').innerHTML = localStorage.getItem("address");
+  fetch('/comment').then(response => response.json()).then((tasks) => 
   {
     const taskListElement = document.getElementById('task-list');
 
@@ -89,9 +91,16 @@ function deleteTask(task) {
 
 // TODO: WRITE FUNCTION TO FETCH DRINKS AND SHOW THE NAME AND
 function loadRatings() {
-  fetch('/drink-rating').then(response => response.json()).then((drinks) => {
-
-    const ratingListElement = document.getElementById('rating');
+  var url = new URL('/comment', "https://" + window.location.hostname);
+  var params = {store: localStorage.getItem("store")};
+  console.log(localStorage.getItem("store"));
+  // const params = new URLSearchParams();
+  // params.append('store', localStorage.getItem("store"));
+  url.search = new URLSearchParams(params).toString();
+  fetch(url).then(response => response.json()).then((drinks) => {
+    console.log(drinks)
+    const ratingListElement = document.getElementById('comment-list');
+    ratingListElement.innerHTML = "";
 
     drinks.forEach((drink) => 
     {
@@ -103,12 +112,27 @@ function loadRatings() {
 
 /** Creates an <li> element containing text. */
 function createListElement(drink) {
+  console.log(drink);
   const ratingElement = document.createElement('li');
   ratingElement.className = 'drink';
 
   const drinkElement = document.createElement('span');
-  drinkElement.innerText = drink.ratingString;
+  drinkElement.innerText = drink.drink + ", " + drink.rating + "/5, " + drink.content;
 
   ratingElement.appendChild(drinkElement);
   return ratingElement;
+}
+
+function storeComment() {
+  var drink = document.getElementById("drink").value;
+  var content = document.getElementById("content").value;
+  var params = new URLSearchParams();
+  params.append('drink', drink);
+  var rating = document.getElementById("rating");
+  params.append('rating', rating.options[rating.selectedIndex].value)
+  params.append('content', content);
+  params.append('store', localStorage.getItem("store"));
+  console.log(params);
+  console.log(localStorage.getItem("store"));
+  fetch('/comment', {method: 'POST', body: params}).catch(e => {console.log(e)});
 }
