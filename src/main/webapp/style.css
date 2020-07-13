@@ -20,5 +20,14 @@
 }
 
 #active{
-    background-color: darkgoldenrod;
+    background-color:pink;
+}
+
+#navbar{
+    text-align: left;
+}
+
+#loginbar{
+    margin: 4px 5px;
+    text-align:right;
 }
