@@ -57,4 +57,3 @@ function createListElement(drink) {
   ratingElement.appendChild(drinkElement);
   return ratingElement;
 }
-

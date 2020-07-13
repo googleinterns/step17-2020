@@ -19,6 +19,6 @@
     text-align: center;
 }
 
-.inline{
-    display: inline;
+#active{
+    background-color: darkgoldenrod;
 }
