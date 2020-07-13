@@ -1,9 +1,8 @@
 .button {
  text-align: center;
- background-color: lightblue;
+ background-color: pink;
  margin: 8px 4px;
  font-size: 30px;
- border:black;
 }
 
 #map {
@@ -20,7 +19,9 @@
 }
 
 #active{
-    background-color:pink;
+    background-color: lightblue;
+    border:black;
+    font-size:35px;
 }
 
 #navbar{
