@@ -29,14 +29,10 @@ public class UserStatus extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-    boolean isLoggedIn;
+   
 
     UserService userService = UserServiceFactory.getUserService();
-    if (userService.isUserLoggedIn()) {
-      isLoggedIn = true;
-    } else {
-      isLoggedIn = false;
-    }
+    boolean isLoggedIn= userService.isUserLoggedIn();
     Gson gson = new Gson();
     String json = gson.toJson(isLoggedIn);
     response.getWriter().println(json);
