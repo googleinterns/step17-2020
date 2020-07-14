@@ -31,7 +31,6 @@ public class UserInfo extends HttpServlet {
     response.setContentType("application/json");
     UserService userService = UserServiceFactory.getUserService();
     String EMAIL = userService.getCurrentUser().getEmail();
-
     Gson gson = new Gson();
     String json = gson.toJson(EMAIL);
     response.getWriter().println(json);
