@@ -30,13 +30,32 @@ public class CommentDatabase {
     return DatastoreServiceFactory.getDatastoreService();
   }
 
-  public static Comment createComment(long rating, String drink, String content, String store) {
+  /**
+   * This function takes in a PreparedQuery object and converts each entity in the into a comment
+   * object
+   */
+  private static List<Comment> IterateQuery(PreparedQuery results) {
+    List<Comment> comments = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      long rating = (long) entity.getProperty("rating");
+      String drink = (String) entity.getProperty("drink");
+      String content = (String) entity.getProperty("content");
+
+      comments.add(new Comment(id, rating, drink, content));
+    }
+    return comments;
+  }
+
+  public static Comment createComment(
+      long rating, String drink, String content, String store, String email) {
     Entity commentEntity = new Entity("Comment");
 
     commentEntity.setProperty("rating", rating);
     commentEntity.setProperty("drink", drink);
     commentEntity.setProperty("content", content);
     commentEntity.setProperty("store", store);
+    commentEntity.setProperty("email", email);
     getDatastore().put(commentEntity);
     long commentID = commentEntity.getKey().getId();
     return new Comment(commentID, rating, drink, content);
@@ -64,17 +83,17 @@ public class CommentDatabase {
     Query query = new Query("Comment").addFilter("store", Query.FilterOperator.EQUAL, storeID);
     PreparedQuery results = getDatastore().prepare(query);
 
-    List<Comment> commentByStore = new ArrayList<>();
-
-    for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      long rating = (long) entity.getProperty("rating");
-      String drink = (String) entity.getProperty("drink");
-      String content = (String) entity.getProperty("content");
-
-      commentByStore.add(new Comment(id, rating, drink, content));
-    }
+    List<Comment> commentByStore = IterateQuery(results);
 
     return commentByStore;
+  }
+
+  public static List<Comment> getCommentByEmail(String email) {
+    Query query = new Query("Comment").addFilter("email", Query.FilterOperator.EQUAL, email);
+    PreparedQuery results = getDatastore().prepare(query);
+
+    List<Comment> commentByEmail = IterateQuery(results);
+
+    return commentByEmail;
   }
 }

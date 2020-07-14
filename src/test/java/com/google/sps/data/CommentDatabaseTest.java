@@ -30,12 +30,13 @@ public final class CommentDatabaseTest {
   private static final String DRINK_A = "Vanilla Latte";
   private static final String CONTENT_A = "Very good.";
   private static final String STORE_A = "21a0b251c9b8392186142c798263e289fe45b4aa";
+  private static final String EMAIL_A = "testA@example.com";
   private static final long RATING_B = 3;
   private static final String DRINK_B = "Cold Brew";
   private static final String CONTENT_B = "Good.";
-  private static final String STORE_B = "21a0b251c9b8392186142c798263e289fe45b4aa";
+  private static final String EMAIL_B = "testB@example.com";
   private static final long RATING_C = 5;
-  private static final String DRINK_C = "Cold Brew";
+  private static final String DRINK_C = "Water";
   private static final String CONTENT_C = "Excellent.";
   private static final String STORE_C = "21a0b251c9b8392186142c798263e289fe45b4ab";
 
@@ -54,7 +55,8 @@ public final class CommentDatabaseTest {
 
   @Test
   public void testGetCommentByID() {
-    Comment commentA = CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A);
+    Comment commentA =
+        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
     Comment commentFromDB = CommentDatabase.getCommentByID(commentA.getId());
     Assert.assertEquals(commentA.getRating(), commentFromDB.getRating());
     Assert.assertEquals(commentA.getDrink(), commentFromDB.getDrink());
@@ -63,10 +65,39 @@ public final class CommentDatabaseTest {
 
   @Test
   public void testGetCommentByStore() {
-    Comment commentA = CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A);
-    Comment commentB = CommentDatabase.createComment(RATING_B, DRINK_B, CONTENT_B, STORE_B);
-    Comment commentC = CommentDatabase.createComment(RATING_C, DRINK_C, CONTENT_C, STORE_C);
-    List<Comment> commentFromDB = CommentDatabase.getCommentByStore(STORE_A);
-    Assert.assertEquals(commentFromDB.size(), 2);
+    Comment commentA =
+        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    Comment commentB =
+        CommentDatabase.createComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_A);
+    Comment commentC =
+        CommentDatabase.createComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A);
+    Comment commentD =
+        CommentDatabase.createComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A);
+    List<Comment> comment = CommentDatabase.getCommentByStore(STORE_A);
+    Assert.assertEquals(comment.size(), 2);
+  }
+
+  @Test
+  public void testGetCommentByEmail() {
+    Comment commentA =
+        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    Comment commentB =
+        CommentDatabase.createComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_B);
+    Comment commentC =
+        CommentDatabase.createComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_B);
+    List<Comment> comment = CommentDatabase.getCommentByEmail(EMAIL_B);
+    Assert.assertEquals(comment.size(), 2);
+  }
+
+  @Test
+  public void testGetCommentWithDuplicateComment() {
+    Comment commentA =
+        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    Comment commentB =
+        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    List<Comment> commentByStore = CommentDatabase.getCommentByStore(STORE_A);
+    Assert.assertEquals(commentByStore.size(), 2);
+    List<Comment> commentByEmail = CommentDatabase.getCommentByEmail(EMAIL_A);
+    Assert.assertEquals(commentByEmail.size(), 2);
   }
 }

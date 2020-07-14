@@ -27,8 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 // Servlet that handles comments
 @WebServlet("/comment")
 public class CommentServlet extends HttpServlet {
-  /* This method takes comments, timestamps and the id of comments and creates a Task object.
-   * It then converts the Task object to a json.
+  /**
+   * This method takes either an email address or a store ID It then gets all the comments with that
+   * email address or store ID and convert them into JSON format
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -45,7 +46,7 @@ public class CommentServlet extends HttpServlet {
     response.getWriter().println(gson.toJson(comments));
   }
 
-  // This method takes input from the comment box and stores it with the rest of the comments
+  /** This method takes input from the comment box and stores it with the rest of the comments */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String drink = getParameter(request, "drink", "");
     drink = drink.toLowerCase();
