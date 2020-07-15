@@ -21,9 +21,9 @@ function determineLogin() {
 }
 
 function displayEmail() {
-  fetch('/get-email').then(response => response.json()).then((EMAIL) => {
-    document.getElementById('login-container').innerText = EMAIL;
-    loadComments(EMAIL);
+  fetch('/get-email').then(response => response.json()).then((email) => {
+    document.getElementById('login-container').innerText = email;
+    loadComments(email);
   }).catch(error => {
     console.error('There has been a problem with your operation:', error);
   });
