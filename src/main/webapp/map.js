@@ -53,18 +53,11 @@ function handleLocationError(browserHasGeolocation, infoWindow, userPos) {
   infoWindow.setPosition(userPos);
   if (browserHasGeolocation) {
   	infoWindow.setContent("Error: The Geolocation service failed.");
-    /* createSearchBox() */;
   } else {
   	infoWindow.setContent("Error: Your browser doesn't support geolocation.");
   }
   infoWindow.open(map);
 }
-
-
-// TODO: document the possibility of having multiple search
-// box in the design doc
-/* function createSearchBox() {
-} */
 
 // Call this wherever needed to actually handle the display
 function codeAddress() {
