@@ -31,7 +31,6 @@ public class LoginServlet extends HttpServlet {
     boolean isLoggedIn = userService.isUserLoggedIn();
 
     if (isLoggedIn) {
-      System.out.println("logged in");
       String userEmail = userService.getCurrentUser().getEmail();
       String redirectUrlAfterLogOut = "/";
       String logoutUrl = userService.createLogoutURL(redirectUrlAfterLogOut);
@@ -39,7 +38,6 @@ public class LoginServlet extends HttpServlet {
       response.getWriter().println("<p>Hello " + userEmail + "!</p>");
       response.getWriter().println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
     } else {
-      System.out.println("not logged in");
       String redirectUrlAfterLogIn = "/";
       String loginUrl = userService.createLoginURL(redirectUrlAfterLogIn);
 
@@ -47,17 +45,6 @@ public class LoginServlet extends HttpServlet {
       response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
     }
   }
-  //   public void doGet(HttpServletRequest request, HttpServletResponse response) throws
-  // IOException {
-  //     response.setContentType("application/json");
-  //     boolean isLoggedIn;
 
-  //     UserService userService = UserServiceFactory.getUserService();
-  //     isLoggedIn=userService.isUserLoggedIn();
-
-  //     Gson gson = new Gson();
-  //     String json = gson.toJson(isLoggedIn);
-  //     response.getWriter().println(json);
-  //   }
 
 }
