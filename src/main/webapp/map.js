@@ -2,7 +2,7 @@ var map;
 var infoWindow;
 var shopInfo;
 var userPos;
-// require('dotenv').config();
+var geocoder;
 
 /** Creates a map that shows all coffee shops around the user. */
 function createMap() {
@@ -26,17 +26,7 @@ function createMap() {
           lng: position.coords.longitude
         };
         map.setCenter(userPos);
-
-        // Request nearby coffee shop info
-        var request = {
-          location: userPos,
-          radius: '500',
-          query: 'coffee shop'
-        };
-        console.log(position.coords.latitude,position.coords.longitude);
-        console.log(google.maps.places);
-        service = new google.maps.places.PlacesService(map);
-        service.textSearch(request, callback);
+        coffeeShopRequest(userPos);
       },
       function() {
         handleLocationError(true, infoWindow, map.getCenter());
@@ -48,17 +38,60 @@ function createMap() {
   }
 }
 
+// Request nearby coffee shop info
+function coffeeShopRequest(userPos) {
+	var request = {
+    location: userPos,
+    radius: '500',
+    query: 'coffee shop'
+  };
+  service = new google.maps.places.PlacesService(map);
+  service.textSearch(request, callback);
+}
+
 function handleLocationError(browserHasGeolocation, infoWindow, userPos) {
   infoWindow.setPosition(userPos);
-  infoWindow.setContent(
-    browserHasGeolocation
-      ? "Error: The Geolocation service failed."
-      : "Error: Your browser doesn't support geolocation."
-  );
+  if (browserHasGeolocation) {
+  	infoWindow.setContent("Error: The Geolocation service failed.");
+    /* createSearchBox() */;
+  } else {
+  	infoWindow.setContent("Error: Your browser doesn't support geolocation.");
+  }
   infoWindow.open(map);
 }
 
-function callback(results, status) {
+
+// TODO: document the possibility of having multiple search
+// box in the design doc
+/* function createSearchBox() {
+} */
+
+// Call this wherever needed to actually handle the display
+function codeAddress() {
+	geocoder = new google.maps.Geocoder();
+	var zipCode = document.getElementById("zipcode").value;
+  console.log(zipCode);
+    geocoder.geocode( {
+      componentRestrictions: {
+        country: 'US',
+        postalCode: zipCode
+      }
+    }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        //Got result, center the map and put it out there
+        map.setCenter(results[0].geometry.location);
+        userPos = {
+          lat: results[0].geometry.location.lat(),
+          lng: results[0].geometry.location.lng()
+        };
+        coffeeShopRequest(userPos);
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+   });
+}
+  
+ function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     for (var i = 0; i < results.length; i++) {
       createMarker(results[i]);
@@ -81,9 +114,4 @@ function createMarker(place) {
     localStorage.setItem("store", place.place_id);
     shopInfo.open(map, marker);
   });
-}
-
-function getShopName() {
-  document.getElementById('title').innerHTML = localStorage.getItem("shopName");
-  document.getElementById('address').innerHTML = localStorage.getItem("address");
 }
