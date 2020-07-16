@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+package com.google.sps.data;
+
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 
 public class Drink {
 
   private final String name;
   private final long id;
-  private HashMap<String, Long> storeIDtoAvgRating;
-
-  private double roundToOneDecimalPlace(int ratings, int numVotes) {
-    return Math.round((ratings / numVotes) * 10) / 10.0;
-  }
+  private HashMap<String, Point2D> storeIDtoAvgRating;
 
   Drink(String name, long id) {
     this.name = name;
@@ -46,6 +45,10 @@ public class Drink {
 
   // TODO: COMPLETE THIS METHOD
   public double updateAverageRating() {
+    double averageRating = 0.0;
+
+    for (int i = 0; i < storeIDtoAvgRating.size(); i++) averageRating += 1;
+
     return 0.0;
   }
 
@@ -55,5 +58,9 @@ public class Drink {
 
   public long getID() {
     return this.id;
+  }
+
+  public double roundToOneDecimalPlace(double num) {
+    return Math.round(num * 10) / 10.0;
   }
 }
