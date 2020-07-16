@@ -31,12 +31,9 @@ public class StoreRatingServlet extends HttpServlet {
   private Map<String, Integer> createMap() {
     Map<String, Integer> map = new LinkedHashMap<>();
 
-    map.put("1", 0);
-    map.put("2", 0);
-    map.put("3", 0);
-    map.put("4", 0);
-    map.put("5", 0);
-
+    // This piece of code creates five keys corresponding to ratings 1-5 and then
+    // maps 0 to those keys indicating that no one has voted for those ratings yet.
+    for (int i = 0; i <= 5; i++) map.put(Integer.toString(i), 0);
     return map;
   }
 

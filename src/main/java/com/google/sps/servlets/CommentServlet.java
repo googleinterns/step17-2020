@@ -55,8 +55,6 @@ public class CommentServlet extends HttpServlet {
     String email = getParameter(request, "email", "");
 
     Comment comment = CommentDatabase.createComment(rating, drink, content, store, email);
-
-    // response.sendRedirect("/coffeeshop.html");
   }
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {

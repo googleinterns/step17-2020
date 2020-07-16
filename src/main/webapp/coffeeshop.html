@@ -9,7 +9,7 @@
     <script src="map.js"></script>
     <script src="script.js"></script>
   </head>
-  <body onload="loadStoreInfo()" id= "background">
+  <body onload="loadStoreInfo()" onload=""id= "background">
     <a href="index.html" class="button">Home</a>
     <a href="user.html" class="button">User</a>
     <a href="store.html" class="button">Stores</a>
@@ -20,21 +20,6 @@
 
     <h2>Comments</h2>
  
-    <!-- <p>Rate this store:</p>
-    <form action="/store-rating" method="POST">
-    <select name="store-rating">
-        <option value="5">5</option>
-        <option value="4">4</option>
-        <option value="3">3</option>
-        <option value="2">2</option>
-        <option value="1">1</option>
-    </select>
-    <input type="submit"/><br>
-    </form>
-    <br/><br/> -->
-
-    <!-- TODO: RATE DRINKS,SHOW THEIR RATINGS -->
-    <!-- <form id="comment" onsubmit="storeComment();"> -->
     <p>Enter your drink below:</p>
     <textarea name="drink" id="drink"></textarea>
     <p>Enter your comment on the drink:</p>
@@ -49,7 +34,7 @@
     <option value="1">1</option>
     </select>
     <button id="comment" onclick="storeComment();">Submit</button>
-    <!-- </form> -->
+
     <button onclick="loadRatings();">Click here to see ratings</button>
     <ul id="comment-list"></ul>
  

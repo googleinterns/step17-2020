@@ -29,7 +29,8 @@ function drawChart() {
     const options = {
       'title': 'Store Ratings',
       'width':600,
-      'height':500
+      'height':500,
+      'legend':'none'
     };
  
     const chart = new google.visualization.BarChart(
@@ -89,7 +90,7 @@ function deleteTask(task) {
   fetch('/delete-task', {method: 'POST', body: params});
 }
 
-// TODO: WRITE FUNCTION TO FETCH DRINKS AND SHOW THE NAME AND
+
 function loadRatings() {
   var url = new URL('/comment', "https://" + window.location.hostname);
   var params = {store: localStorage.getItem("store")};
