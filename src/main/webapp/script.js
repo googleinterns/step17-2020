@@ -21,7 +21,7 @@ function determineLogin() {
 }
 
 function displayEmail() {
-  fetch('/get-login-info').then(response => response.json()).then((email) => {
+  fetch('/get-email').then(response => response.json()).then((email) => {
     document.getElementById('login-container').innerText = email;
     loadComments(email);
   }).catch(error => {
