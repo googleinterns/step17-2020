@@ -1,17 +1,15 @@
 function determineLogin() {
-  fetch('/get-login-info').then(response => response.json()).then((isLoggedIn, email) => {
+  fetch('/get-login-info').then(response => response.json()).then((isLoggedIn) => {
     const element = document.getElementById('form');
     const textElement = document.createElement('span');
     const form = document.createElement('form');
     form.method='GET';
     form.action='/login';
     const button = document.createElement('button');
-    console.log(isLoggedIn);
-    console.log(email);
     if (!isLoggedIn) {
       button.innerHTML = "Login";
     } else {
-     // displayEmail();
+      displayEmail();
       button.innerHTML = "Logout";
     }
     form.appendChild(button);

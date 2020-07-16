@@ -4,7 +4,6 @@ public class Store {
   private long lng;
 
   public Store(String id, long lat, long lng) {
-
     this.id = id;
     this.lat = lat;
     this.lng = lng;
