@@ -1,15 +1,17 @@
 function determineLogin() {
-  fetch('/get-login-info').then(response => response.json()).then((isLoggedIn) => {
+  fetch('/get-login-info').then(response => response.json()).then((isLoggedIn, email) => {
     const element = document.getElementById('form');
     const textElement = document.createElement('span');
     const form = document.createElement('form');
     form.method='GET';
     form.action='/login';
     const button = document.createElement('button');
+    console.log(isLoggedIn);
+    console.log(email);
     if (!isLoggedIn) {
       button.innerHTML = "Login";
     } else {
-      displayEmail();
+     // displayEmail();
       button.innerHTML = "Logout";
     }
     form.appendChild(button);
@@ -21,9 +23,9 @@ function determineLogin() {
 }
 
 function displayEmail() {
-  fetch('/get-email').then(response => response.json()).then((EMAIL) => {
-    document.getElementById('login-container').innerText = EMAIL;
-    loadComments(EMAIL);
+  fetch('/get-login-info').then(response => response.json()).then((email) => {
+    document.getElementById('login-container').innerText = email;
+    loadComments(email);
   }).catch(error => {
     console.error('There has been a problem with your operation:', error);
   });
