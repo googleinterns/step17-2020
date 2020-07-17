@@ -43,14 +43,15 @@ public class Drink {
     return null;
   }
 
-  // TODO: COMPLETE THIS METHOD
-  public double updateAverageRating() {
+  /* TODO: COMPLETE THIS METHOD
+  public double updateAverageRating(String store) {
     double averageRating = 0.0;
 
     for (int i = 0; i < storeIDtoAvgRating.size(); i++) averageRating += 1;
 
     return 0.0;
   }
+  */
 
   public String getName() {
     return this.name;
