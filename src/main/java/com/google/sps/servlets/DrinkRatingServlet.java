@@ -32,19 +32,17 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/drink-rating")
 public class DrinkRatingServlet extends HttpServlet {
 
-  private final String maxRating = "/5.0";
+  private final double maxRating = 5.0;
   private List<String> knownDrinks = new ArrayList<>();
   public Map<String, Integer> votes = createMap();
 
   private Map<String, Integer> createMap() {
     Map<String, Integer> map = new LinkedHashMap<>();
 
-    map.put("1", 0);
-    map.put("2", 0);
-    map.put("3", 0);
-    map.put("4", 0);
-    map.put("5", 0);
-
+    /* Initializes a map with 5 keys corresponding to the ratings and gives each
+     *  of the keys a value of 0 indicating how many people have made that rating so far
+     */
+    for (int i = 1; i <= 5; i++) map.put(Integer.toString(i), 0);
     return map;
   }
 
@@ -64,6 +62,8 @@ public class DrinkRatingServlet extends HttpServlet {
     return average;
   }
 
+  // This method gets drink names and ratings from datastore and formats that information for
+  // printing onto the page.
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
