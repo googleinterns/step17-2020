@@ -21,9 +21,9 @@ function determineLogin() {
 }
 
 function displayEmail() {
-  fetch('/get-email').then(response => response.json()).then((EMAIL) => {
-    document.getElementById('login-container').innerText = EMAIL;
-    loadComments(EMAIL);
+  fetch('/get-email').then(response => response.json()).then((email) => {
+    document.getElementById('login-container').innerText = email;
+    loadComments(email);
   }).catch(error => {
     console.error('There has been a problem with your operation:', error);
   });
@@ -47,7 +47,6 @@ function loadComments(email) {
 
 /** Creates an <li> element containing text. */
 function createListElement(drink) {
-  console.log(drink);
   const ratingElement = document.createElement('li');
   ratingElement.className = 'drink';
 
@@ -57,4 +56,3 @@ function createListElement(drink) {
   ratingElement.appendChild(drinkElement);
   return ratingElement;
 }
-
