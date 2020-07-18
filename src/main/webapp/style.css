@@ -1,12 +1,24 @@
 .button {
  text-align: center;
- background-color:ghostwhite;
+ background-color: lightblue;
  margin: 8px 4px;
  font-size: 30px;
+ border:black;
 }
 
 #map {
   border: thin solid black;
   height: 500px;
   width: 500px;
+}
+
+#background {
+    background-color: lightpink;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.inline{
+    display: inline;
 }

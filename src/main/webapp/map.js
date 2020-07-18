@@ -1,43 +1,89 @@
-let map;
+var map;
+var infoWindow;
+var shopInfo;
+var userPos;
+// require('dotenv').config();
 
-/* Editable marker that displays when a user clicks in the map. */
-let editMarker;
-
-let markers = [[40.7122879, -74.0106218, "Starbucks"], [40.7105991, -74.0112465, "Irving Farm New York"]]
-
-/** Creates a map that allows users to add markers. */
+/** Creates a map that shows all coffee shops around the user. */
 function createMap() {
+  // Set default location at new york city
+  var newyork = new google.maps.LatLng(40.7128, -74.0060);
   map = new google.maps.Map(
     document.getElementById('map'),
-    {center: {lat: 40.7128, lng: -74.0060}, zoom: 12});
+    {center: newyork, zoom: 14});
+  
+  // Infowindow for to handle error in get user location
+  infoWindow = new google.maps.InfoWindow();
+  // Global infowindow for coffee shop
+  shopInfo = new google.maps.InfoWindow();
 
-  // When the user clicks in the map, show a marker with a text box the user can
-  // edit.
-  map.addListener('click', (event) => {
-    createMarkerForEdit(event.latLng.lat(), event.latLng.lng());
-  });
-  fetchMarkers();
-}
+  // Try HTML5 geolocation to get user location.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        userPos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        map.setCenter(userPos);
 
-/** Fetches markers from the backend and adds them to the map. */
-function fetchMarkers() {
-  for (i = 0; i < markers.length; i++) { 
-    createMarkerForDisplay(markers[i]);
+        // Request nearby coffee shop info
+        var request = {
+          location: userPos,
+          radius: '500',
+          query: 'coffee shop'
+        };
+        console.log(position.coords.latitude,position.coords.longitude);
+        console.log(google.maps.places);
+        service = new google.maps.places.PlacesService(map);
+        service.textSearch(request, callback);
+      },
+      function() {
+        handleLocationError(true, infoWindow, map.getCenter());
+      }
+    );
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
   }
 }
 
-/** 
- *  Creates a marker that shows a info window when clicked. 
- *  The link leads to the coffee shop page which contains
- *  individual coffee shop information
- */
-function createMarkerForDisplay(shop) {
-  const marker =
-    new google.maps.Marker({position: {lat: shop[0], lng: shop[1]}, map: map, title: shop[2]});
-  const infoWindow = new google.maps.InfoWindow({content: '<a href=coffeeshop.html>' + shop[2] + '</a>'});
-  marker.addListener('click', () => {
-    infoWindow.open(map, marker);
-    map.setZoom(14);
-    map.setCenter(LatLng(shop[0], shop[1]));
+function handleLocationError(browserHasGeolocation, infoWindow, userPos) {
+  infoWindow.setPosition(userPos);
+  infoWindow.setContent(
+    browserHasGeolocation
+      ? "Error: The Geolocation service failed."
+      : "Error: Your browser doesn't support geolocation."
+  );
+  infoWindow.open(map);
+}
+
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    for (var i = 0; i < results.length; i++) {
+      createMarker(results[i]);
+    }
+  }
+}
+
+function createMarker(place) {
+  var marker = new google.maps.Marker({
+    map: map,
+    position: place.geometry.location
   });
+  marker.addListener('click', () => {
+    shopInfo.close();
+    shopInfo.setContent('<a href=coffeeshop.html>' + place.name + '</a>');
+    // Save place name and address in local storage
+    // to display in the coffeeshop page
+    localStorage.setItem("shopName", place.name);
+    localStorage.setItem("address", place.formatted_address);
+    localStorage.setItem("store", place.place_id);
+    shopInfo.open(map, marker);
+  });
+}
+
+function getShopName() {
+  document.getElementById('title').innerHTML = localStorage.getItem("shopName");
+  document.getElementById('address').innerHTML = localStorage.getItem("address");
 }
