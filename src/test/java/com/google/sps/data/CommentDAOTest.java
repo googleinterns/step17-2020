@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public final class CommentDatabaseTest {
+public final class CommentDAOTest {
   private static final long RATING_A = 4;
   private static final String DRINK_A = "Vanilla Latte";
   private static final String CONTENT_A = "Very good.";
@@ -55,9 +55,8 @@ public final class CommentDatabaseTest {
 
   @Test
   public void testGetCommentByID() {
-    Comment commentA =
-        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
-    Comment commentFromDB = CommentDatabase.getCommentByID(commentA.getId());
+    Comment commentA = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    Comment commentFromDB = CommentDAO.getCommentByID(commentA.getId());
     Assert.assertEquals(commentA.getRating(), commentFromDB.getRating());
     Assert.assertEquals(commentA.getDrink(), commentFromDB.getDrink());
     Assert.assertEquals(commentA.getContent(), commentFromDB.getContent());
@@ -65,39 +64,42 @@ public final class CommentDatabaseTest {
 
   @Test
   public void testGetCommentByStore() {
-    Comment commentA =
-        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
-    Comment commentB =
-        CommentDatabase.createComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_A);
-    Comment commentC =
-        CommentDatabase.createComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A);
-    Comment commentD =
-        CommentDatabase.createComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A);
-    List<Comment> comment = CommentDatabase.getCommentByStore(STORE_A);
-    Assert.assertEquals(comment.size(), 2);
+    Comment commentA = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    Comment commentB = CommentDAO.storeComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_A);
+    Comment commentC = CommentDAO.storeComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A);
+    Comment commentD = CommentDAO.storeComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A);
+    List<Comment> comments = CommentDAO.getCommentByStore(STORE_A);
+    Assert.assertEquals(comments.size(), 2);
+    for (Comment comment : comments) {
+      Assert.assertEquals(comment.getStore(), STORE_A);
+    }
   }
 
   @Test
   public void testGetCommentByEmail() {
-    Comment commentA =
-        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
-    Comment commentB =
-        CommentDatabase.createComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_B);
-    Comment commentC =
-        CommentDatabase.createComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_B);
-    List<Comment> comment = CommentDatabase.getCommentByEmail(EMAIL_B);
-    Assert.assertEquals(comment.size(), 2);
+    Comment commentA = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    Comment commentB = CommentDAO.storeComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_B);
+    Comment commentC = CommentDAO.storeComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_B);
+    List<Comment> comments = CommentDAO.getCommentByEmail(EMAIL_B);
+    Assert.assertEquals(comments.size(), 2);
+    for (Comment comment : comments) {
+      Assert.assertEquals(comment.getEmail(), EMAIL_B);
+    }
   }
 
   @Test
   public void testGetCommentWithDuplicateComment() {
-    Comment commentA =
-        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
-    Comment commentB =
-        CommentDatabase.createComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
-    List<Comment> commentByStore = CommentDatabase.getCommentByStore(STORE_A);
+    Comment commentA = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    Comment commentB = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    List<Comment> commentByStore = CommentDAO.getCommentByStore(STORE_A);
     Assert.assertEquals(commentByStore.size(), 2);
-    List<Comment> commentByEmail = CommentDatabase.getCommentByEmail(EMAIL_A);
+    for (Comment comment : commentByStore) {
+      Assert.assertEquals(comment.getStore(), STORE_A);
+    }
+    List<Comment> commentByEmail = CommentDAO.getCommentByEmail(EMAIL_A);
     Assert.assertEquals(commentByEmail.size(), 2);
+    for (Comment comment : commentByEmail) {
+      Assert.assertEquals(comment.getEmail(), EMAIL_A);
+    }
   }
 }

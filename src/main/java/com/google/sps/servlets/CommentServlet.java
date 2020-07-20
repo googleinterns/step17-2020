@@ -16,7 +16,7 @@ package com.google.sps.servlets;
 
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
-import com.google.sps.data.CommentDatabase;
+import com.google.sps.data.CommentDAO;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
@@ -34,10 +34,10 @@ public class CommentServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     List<Comment> comments;
-    if (getParameter(request, "store", "").isEmpty()) {
-      comments = CommentDatabase.getCommentByEmail(getParameter(request, "email", ""));
+    if (request.getParameter("store").isEmpty()) {
+      comments = CommentDAO.getCommentByEmail(request.getParameter("email"));
     } else {
-      comments = CommentDatabase.getCommentByStore(getParameter(request, "store", ""));
+      comments = CommentDAO.getCommentByStore(request.getParameter("store"));
     }
 
     Gson gson = new Gson();
@@ -48,20 +48,15 @@ public class CommentServlet extends HttpServlet {
 
   /** This method takes input from the comment box and stores it with the rest of the comments */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String drink = getParameter(request, "drink", "");
+    String drink = request.getParameter("drink");
     drink = drink.toLowerCase();
-    long rating = Integer.parseInt(getParameter(request, "rating", ""));
-    String content = getParameter(request, "content", "");
-    String store = getParameter(request, "store", "");
-    String email = getParameter(request, "email", "");
+    long rating = Integer.parseInt(request.getParameter("rating"));
+    String content = request.getParameter("content");
+    String store = request.getParameter("store");
+    String email = request.getParameter("email");
 
-    Comment comment = CommentDatabase.createComment(rating, drink, content, store, email);
+    CommentDAO.storeComment(rating, drink, content, store, email);
 
     // response.sendRedirect("/coffeeshop.html");
-  }
-
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    return (value == null) ? defaultValue : value;
   }
 }
