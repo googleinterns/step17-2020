@@ -14,17 +14,25 @@
 
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
+var ratingMap = new Map();
 
 // Creates a chart and adds it to the page
 function drawChart() {
-    fetch('/store-rating').then(response => response.json())
-  .then((votes) => {
+  //   fetch('/store-rating').then(response => response.json())
+  // .then((votes) => {
     const data = new google.visualization.DataTable();
     data.addColumn('string', 'Rating');
     data.addColumn('number', 'Votes');
-    Object.keys(votes).forEach((rating) => {
-      data.addRow([rating, votes[rating]]);
-    });
+    // Object.keys(votes).forEach((rating) => {
+      // data.addRow([rating, votes[rating]]);
+    // });
+
+    
+    console.log(ratingMap);
+    for(let i = 1; i < 6; i++) {
+      console.log(ratingMap[i]);
+      data.addRow([i.toString(), ratingMap[i]]);
+    }
  
     const options = {
       'title': 'Store Ratings',
@@ -35,7 +43,7 @@ function drawChart() {
     const chart = new google.visualization.BarChart(
         document.getElementById('chart-container'));
     chart.draw(data, options);
-    });
+    // });
 }
 
 
@@ -44,49 +52,7 @@ function loadStoreInfo()
 {
   document.getElementById('title').innerHTML = localStorage.getItem("shopName");
   document.getElementById('address').innerHTML = localStorage.getItem("address");
-  fetch('/comment').then(response => response.json()).then((tasks) => 
-  {
-    const taskListElement = document.getElementById('task-list');
-
-    tasks.forEach((task) => 
-    {
-      taskListElement.appendChild(createTaskElement(task));
-    })
-    
-  });
-}
-
-/** Creates an element that represents a task, including its delete button. */
-function createTaskElement(task) 
-{
-    const taskElement = document.createElement('li');
-    taskElement.className = 'task';
-
-    const titleElement = document.createElement('span');
-    titleElement.innerText = task.comment;
-
-    const deleteButtonElement = document.createElement('button');
-    deleteButtonElement.innerText = 'Delete';
-    
-    deleteButtonElement.addEventListener('click', () => 
-    {
-        deleteTask(task);
-
-        // Remove the task from the DOM.
-        taskElement.remove();
-    });
-
-    taskElement.appendChild(titleElement);
-    taskElement.appendChild(deleteButtonElement);
-    return taskElement;
-}
-
-
-/** Tells the server to delete the task. */
-function deleteTask(task) {
-  const params = new URLSearchParams();
-  params.append('id', task.id);
-  fetch('/delete-task', {method: 'POST', body: params});
+  loadRatings();
 }
 
 // TODO: WRITE FUNCTION TO FETCH DRINKS AND SHOW THE NAME AND
@@ -99,13 +65,29 @@ function loadRatings() {
     console.log(drinks)
     const ratingListElement = document.getElementById('comment-list');
     ratingListElement.innerHTML = "";
+    initializeChart();
 
     drinks.forEach((drink) => 
     {
       ratingListElement.appendChild(createListElement(drink));
+      addDrinkToChart(drink);
     })
 
+    drawChart();
   });
+}
+
+function initializeChart() {
+  for(let i = 1; i < 6; i++) {
+    console.log(typeof(i));
+    ratingMap[i] = 0;
+  }
+}
+
+function addDrinkToChart(drink) {
+  console.log(typeof(drink.rating));
+  console.log(drink.rating)
+  ratingMap[drink.rating]++;
 }
 
 /** Creates an <li> element containing text. */
@@ -121,14 +103,16 @@ function createListElement(drink) {
   return ratingElement;
 }
 
-function storeComment() {
+function processComment() {
   fetch('/get-login-info').then(response => response.json()).then((isLoggedIn) => {
     if (!isLoggedIn) {
       window.alert("You're not logged in. Please log in to leave comment.");
       return;
     } else {
       fetch('/get-email').then(response => response.json()).then((email) => {
-        processComment(email);
+        storeComment(email);
+        updateChart();
+        drawChart();
       }).catch(error => {
         console.error('There has been a problem with get-email:', error);
       });
@@ -138,7 +122,7 @@ function storeComment() {
   });
 }
 
-function processComment(email) {
+function storeComment(email) {
   var drink = document.getElementById("drink").value;
   var content = document.getElementById("content").value;
   var params = new URLSearchParams();
@@ -148,5 +132,24 @@ function processComment(email) {
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
   params.append('email', email);
-  fetch('/comment', {method: 'POST', body: params}).catch(e => {console.log(e)});
+  fetch('/comment', {method: 'POST', body: params}).catch(e => {
+    console.log(e)
+  });
+  const drinkObj = new Object();
+  drinkObj.drink = drink.toLowerCase();
+  drinkObj.rating = rating.options[rating.selectedIndex].value;
+  drinkObj.content = content;
+  const ratingListElement = document.getElementById('comment-list');
+  ratingListElement.appendChild(createListElement(drinkObj));
+  clearInput();
+}
+
+function updateChart() {
+  var rating = document.getElementById("rating");
+  ratingMap[rating.options[rating.selectedIndex].value]++;
+}
+
+function clearInput() {
+  document.getElementById("drink").value = "";
+  document.getElementById("content").value = "";
 }
