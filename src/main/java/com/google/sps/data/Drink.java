@@ -20,13 +20,13 @@ import java.util.HashMap;
 public class Drink {
 
   private final String name;
-  private final long id;
-  private HashMap<String, Point2D> storeIDtoAvgRating;
+  private final String id;
+  public HashMap<String, Point2D> storeIDToAvgRating;
 
-  Drink(String name, long id) {
+  Drink(String name, String id) {
     this.name = name;
     this.id = id;
-    this.storeIDtoAvgRating = new HashMap<>();
+    this.storeIDToAvgRating = new HashMap<>();
   }
 
   // TODO: COMPLETE THIS METHOD
@@ -43,25 +43,42 @@ public class Drink {
     return null;
   }
 
-  /* TODO: COMPLETE THIS METHOD
-  public double updateAverageRating(String store) {
-    double averageRating = 0.0;
+  // TODO: DATASTORE
 
-    for (int i = 0; i < storeIDtoAvgRating.size(); i++) averageRating += 1;
+  public double updateAverageRating(String id, double newRating) {
+    Point2D ratings = storeIDToAvgRating.get(id);
+    double numRatings = ratings.getX();
+    double averageRating = ratings.getY();
+    double errorReturnValue = -Double.MAX_VALUE;
 
-    return 0.0;
+    if (newRating == 0.0) {
+      return errorReturnValue;
+    }
+
+    if (numRatings == 0.0) {
+      ratings.setLocation(1.0, newRating);
+      storeIDToAvgRating.put(id, ratings);
+      return newRating;
+    }
+
+    averageRating = ((averageRating * numRatings) + newRating) / (numRatings + 1);
+    averageRating = roundToOneDecimalPlace(averageRating);
+    ratings.setLocation(numRatings + 1, averageRating);
+
+    return averageRating;
   }
-  */
 
   public String getName() {
     return this.name;
   }
 
-  public long getID() {
+  public String getID() {
     return this.id;
   }
 
   public double roundToOneDecimalPlace(double num) {
+    if (num < 1.0) return 0.0;
+
     return Math.round(num * 10) / 10.0;
   }
 }
