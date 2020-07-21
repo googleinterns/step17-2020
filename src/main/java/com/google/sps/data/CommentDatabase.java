@@ -41,7 +41,7 @@ public class CommentDatabase {
     commentEntity.setProperty("email", email);
     getDatastore().put(commentEntity);
     long commentID = commentEntity.getKey().getId();
-    return new Comment(commentID, rating, drink, content);
+    return new Comment(commentID, rating, drink, content, email);
   }
 
   public static Comment getCommentByID(long commentID) {
@@ -58,8 +58,9 @@ public class CommentDatabase {
     long rating = (long) commentEntity.getProperty("rating");
     String drink = (String) commentEntity.getProperty("drink");
     String content = (String) commentEntity.getProperty("content");
+    String email = (String) commentEntity.getProperty("email");
 
-    return new Comment(commentID, rating, drink, content);
+    return new Comment(commentID, rating, drink, content, email);
   }
 
   public static List<Comment> getCommentByStore(String storeID) {
@@ -73,8 +74,9 @@ public class CommentDatabase {
       long rating = (long) entity.getProperty("rating");
       String drink = (String) entity.getProperty("drink");
       String content = (String) entity.getProperty("content");
+      String email = (String) entity.getProperty("email");
 
-      commentByStore.add(new Comment(id, rating, drink, content));
+      commentByStore.add(new Comment(id, rating, drink, content, email));
     }
 
     return commentByStore;
@@ -91,8 +93,9 @@ public class CommentDatabase {
       long rating = (long) entity.getProperty("rating");
       String drink = (String) entity.getProperty("drink");
       String content = (String) entity.getProperty("content");
+      email = (String) entity.getProperty("email");
 
-      commentByEmail.add(new Comment(id, rating, drink, content));
+      commentByEmail.add(new Comment(id, rating, drink, content, email));
     }
 
     return commentByEmail;

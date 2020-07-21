@@ -35,7 +35,6 @@ function loadComments(email) {
   url.search = new URLSearchParams(params).toString();
   fetch(url).then(response => response.json()).then((drinks) => {
     const ratingListElement = document.getElementById('list');
-    ratingListElement.innerHTML = "";
 
     drinks.forEach((drink) => 
     {
@@ -51,7 +50,7 @@ function createListElement(drink) {
   ratingElement.className = 'drink';
 
   const drinkElement = document.createElement('span');
-  drinkElement.innerText = drink.drink + ", " + drink.rating + "/5, " + drink.content;
+  drinkElement.innerText = drink.email +", "+drink.drink + ", " + drink.rating + "/5, " + drink.content;
 
   ratingElement.appendChild(drinkElement);
   return ratingElement;
