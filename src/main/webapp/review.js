@@ -87,3 +87,47 @@ function deleteTask(task) {
   fetch('/delete-task', {method: 'POST', body: params});
 }
 
+/** Get comments and ratings from the database */
+function loadRatings() {
+  // Create url and params to avoid "request has method 'get' and cannot have a body" error
+  var url = new URL('/comment', "https://" + window.location.hostname);
+  var params = {store: localStorage.getItem("store")};
+  url.search = new URLSearchParams(params).toString();
+  fetch(url).then(response => response.json()).then((drinks) => {
+    const ratingListElement = document.getElementById('comment-list');
+    ratingListElement.innerHTML = "";
+    drinks.forEach((drink) => {
+      ratingListElement.appendChild(createListElement(drink));
+    })
+  });
+}
+
+function storeComment() {
+  fetch('/get-login-info').then(response => response.json()).then((isLoggedIn) => {
+    if (!isLoggedIn) {
+      window.alert("You're not logged in. Please log in to leave comment.");
+      return;
+    } else {
+      fetch('/get-email').then(response => response.json()).then((email) => {
+        processComment(email);
+      }).catch(error => {
+        console.error('There has been a problem with get-email:', error);
+      });
+    }
+  }).catch(error => {
+    console.error('There has been a problem with get login info:', error);
+  });
+}
+
+function processComment(email) {
+  var drink = document.getElementById("drink").value;
+  var content = document.getElementById("content").value;
+  var params = new URLSearchParams();
+  params.append('drink', drink);
+  var rating = document.getElementById("rating");
+  params.append('rating', rating.options[rating.selectedIndex].value)
+  params.append('content', content);
+  params.append('store', localStorage.getItem("store"));
+  params.append('email', email);
+  fetch('/comment', {method: 'POST', body: params}).catch(e => {console.log(e)});
+}

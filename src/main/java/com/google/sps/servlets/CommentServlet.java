@@ -14,13 +14,9 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
+import com.google.sps.data.Comment;
+import com.google.sps.data.CommentDAO;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
@@ -29,65 +25,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 // Servlet that handles comments
-@WebServlet("/make-comment")
+@WebServlet("/comment")
 public class CommentServlet extends HttpServlet {
-  /* This method takes comments, timestamps and the id of comments and creates a Task object.
-   * It then converts the Task object to a json.
+  /**
+   * This method takes either an email address or a store ID It then gets all the comments with that
+   * email address or store ID and convert them into JSON format
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Task").addSort("timestamp", SortDirection.DESCENDING);
-
-    DatastoreService savedComments = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = savedComments.prepare(query);
-
-    List<Task> tasks = new ArrayList<>();
-
-    for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      long timestamp = (long) entity.getProperty("timestamp");
-      String comment = (String) entity.getProperty("comment");
-
-      Task task = new Task(id, timestamp, comment);
-      tasks.add(task);
+    List<Comment> comments;
+    if (request.getParameter("store").isEmpty()) {
+      comments = CommentDAO.getCommentByEmail(request.getParameter("email"));
+    } else {
+      comments = CommentDAO.getCommentByStore(request.getParameter("store"));
     }
 
     Gson gson = new Gson();
 
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(tasks));
+    response.getWriter().println(gson.toJson(comments));
   }
 
-  // This method takes input from the comment box and stores it with the rest of the comments
+  /** This method takes input from the comment box and stores it with the rest of the comments */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String comment = getParameter(request, "text-input", "");
-    long timestamp = System.currentTimeMillis();
+    String drink = request.getParameter("drink");
+    drink = drink.toLowerCase();
+    long rating = Integer.parseInt(request.getParameter("rating"));
+    String content = request.getParameter("content");
+    String store = request.getParameter("store");
+    String email = request.getParameter("email");
 
-    Entity taskEntity = new Entity("Task");
-    taskEntity.setProperty("comment", comment);
-    taskEntity.setProperty("timestamp", timestamp);
+    CommentDAO.storeComment(rating, drink, content, store, email);
 
-    DatastoreService savedComments = DatastoreServiceFactory.getDatastoreService();
-    savedComments.put(taskEntity);
-
-    response.sendRedirect("/index.html");
-  }
-
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    return (value == null) ? defaultValue : value;
-  }
-}
-
-// The Task class is used to store and group information that will be used for comments
-class Task {
-  private final long id;
-  private final long timestamp;
-  private final String comment;
-
-  public Task(long id, long timestamp, String comment) {
-    this.id = id;
-    this.timestamp = timestamp;
-    this.comment = comment;
+    // response.sendRedirect("/coffeeshop.html");
   }
 }
