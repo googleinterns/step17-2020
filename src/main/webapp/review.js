@@ -17,32 +17,34 @@ google.charts.setOnLoadCallback(drawChart);
 
 // Creates a chart and adds it to the page
 function drawChart() {
+    fetch('/store-rating').then(response => response.json())
+  .then((votes) => {
     const data = new google.visualization.DataTable();
     data.addColumn('string', 'Rating');
     data.addColumn('number', 'Votes');
-    data.addRows([
-          ['Excellent', 33],
-          ['Good', 19],
-          ['Average', 10],
-          ['Bad', 6],
-          ['Terrible', 3]
-        ]);
-
+    Object.keys(votes).forEach((rating) => {
+      data.addRow([rating, votes[rating]]);
+    });
+ 
     const options = {
       'title': 'Store Ratings',
       'width':600,
       'height':500
     };
-
+ 
     const chart = new google.visualization.BarChart(
         document.getElementById('chart-container'));
     chart.draw(data, options);
+    });
 }
 
+
 // Adds comments to the page
-function loadComments() 
+function loadStoreInfo() 
 {
-  fetch('/make-comment').then(response => response.json()).then((tasks) => 
+  document.getElementById('title').innerHTML = localStorage.getItem("shopName");
+  document.getElementById('address').innerHTML = localStorage.getItem("address");
+  fetch('/comment').then(response => response.json()).then((tasks) => 
   {
     const taskListElement = document.getElementById('task-list');
 
@@ -89,17 +91,31 @@ function deleteTask(task) {
 
 /** Get comments and ratings from the database */
 function loadRatings() {
-  // Create url and params to avoid "request has method 'get' and cannot have a body" error
   var url = new URL('/comment', "https://" + window.location.hostname);
   var params = {store: localStorage.getItem("store")};
   url.search = new URLSearchParams(params).toString();
   fetch(url).then(response => response.json()).then((drinks) => {
     const ratingListElement = document.getElementById('comment-list');
     ratingListElement.innerHTML = "";
+
     drinks.forEach((drink) => {
       ratingListElement.appendChild(createListElement(drink));
     })
+
   });
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(drink) {
+  console.log(drink);
+  const ratingElement = document.createElement('li');
+  ratingElement.className = 'drink';
+
+  const drinkElement = document.createElement('span');
+  drinkElement.innerText = drink.drink + ", " + drink.rating + "/5, " + drink.content;
+
+  ratingElement.appendChild(drinkElement);
+  return ratingElement;
 }
 
 function storeComment() {

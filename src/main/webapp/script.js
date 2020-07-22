@@ -1,6 +1,5 @@
 function determineLogin() {
-  fetch('/login').then(response => response.json()).then((isLoggedIn) => {
-    console.log("Displaying login info")
+  fetch('/get-login-info').then(response => response.json()).then((isLoggedIn) => {
     const element = document.getElementById('form');
     const textElement = document.createElement('span');
     const form = document.createElement('form');
@@ -8,13 +7,10 @@ function determineLogin() {
     form.action='/login';
     const button = document.createElement('button');
     if (!isLoggedIn) {
-      textElement.innerText = "Please log in to view this page";
       button.innerHTML = "Login";
-      console.log("not logged in");
     } else {
-      textElement.innerText = "You're logged in!";
+      displayEmail();
       button.innerHTML = "Logout";
-      console.log("logged in");
     }
     form.appendChild(button);
     element.appendChild(textElement);
@@ -24,14 +20,39 @@ function determineLogin() {
   });
 }
 
-//how to fetch data from servlet
-async function getData() {
-  const response = await fetch('/data');
-  const data = await response.text();
-  document.getElementById('server-data-container').innerText = data;
+function displayEmail() {
+  fetch('/get-email').then(response => response.json()).then((email) => {
+    document.getElementById('login-container').innerText = email;
+    loadComments(email);
+  }).catch(error => {
+    console.error('There has been a problem with your operation:', error);
+  });
 }
 
-// function getUserEmail() {fetch('/').then(response => response.json()).then((isLoggedIn) => {
-//     console.log("Displaying login info")
+function loadComments(email) {
+  var url = new URL('/comment', "https://" + window.location.hostname);
+  var params = {email: email};
+  url.search = new URLSearchParams(params).toString();
+  fetch(url).then(response => response.json()).then((drinks) => {
+    const ratingListElement = document.getElementById('list');
+    ratingListElement.innerHTML = "";
 
-// }
+    drinks.forEach((drink) => 
+    {
+      ratingListElement.appendChild(createListElement(drink));
+    })
+
+  });
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(drink) {
+  const ratingElement = document.createElement('li');
+  ratingElement.className = 'drink';
+
+  const drinkElement = document.createElement('span');
+  drinkElement.innerText = drink.drink + ", " + drink.rating + "/5, " + drink.content;
+
+  ratingElement.appendChild(drinkElement);
+  return ratingElement;
+}

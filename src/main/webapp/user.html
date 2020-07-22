@@ -2,21 +2,24 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Capstone Prototype</title>
+    <title>Capstone MVP</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="determineLogin()" id= "background">
+
         <a href="index.html" class="button">Home</a>
         <a href="user.html" class="button">User</a>
         <a href="store.html" class="button">Stores</a>
-        
-    <div> Hey! Tyler, you are logged in! (tyh@google.com) </div>
-     <button> Logout </button>
-     <br><br>
 
-    <div> You have made 1 review! </div> 
-    <div> You rated "Starbucks 10 Waverly Place"'s "iced reserve latte" a "5/5!" </div>
+      <div id="EMAIL"></div>
+      <div id="form"></div>
+
+      <div id="login-container"></div>
+      
+      <div id="Setup">Here is a list of reviews you have made! </div>
+      <div class= "inline" id="EMAIL"></div>
+      <ul id="list"></ul>
    
 
 

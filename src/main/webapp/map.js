@@ -2,6 +2,7 @@ var map;
 var infoWindow;
 var shopInfo;
 var userPos;
+// require('dotenv').config();
 
 /** Creates a map that shows all coffee shops around the user. */
 function createMap() {
@@ -33,6 +34,8 @@ function createMap() {
           radius: '500',
           query: 'coffee shop'
         };
+        console.log(position.coords.latitude,position.coords.longitude);
+        console.log(google.maps.places);
         service = new google.maps.places.PlacesService(map);
         service.textSearch(coffeshopRequest, callback);
       },
@@ -81,6 +84,7 @@ function createMarker(place) {
     // to display in the coffeeshop page
     localStorage.setItem("shopName", place.name);
     localStorage.setItem("address", place.formatted_address);
+    localStorage.setItem("store", place.place_id);
     shopInfo.open(map, marker);
   });
 }

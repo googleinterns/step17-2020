@@ -45,17 +45,4 @@ public class LoginServlet extends HttpServlet {
       response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
     }
   }
-  //   public void doGet(HttpServletRequest request, HttpServletResponse response) throws
-  // IOException {
-  //     response.setContentType("application/json");
-  //     boolean isLoggedIn;
-
-  //     UserService userService = UserServiceFactory.getUserService();
-  //     isLoggedIn=userService.isUserLoggedIn();
-
-  //     Gson gson = new Gson();
-  //     String json = gson.toJson(isLoggedIn);
-  //     response.getWriter().println(json);
-  //   }
-
 }
