@@ -18,32 +18,23 @@ var ratingMap = new Map();
 
 // Creates a chart and adds it to the page
 function drawChart() {
-  //   fetch('/store-rating').then(response => response.json())
-  // .then((votes) => {
-    const data = new google.visualization.DataTable();
-    data.addColumn('string', 'Rating');
-    data.addColumn('number', 'Votes');
-    // Object.keys(votes).forEach((rating) => {
-      // data.addRow([rating, votes[rating]]);
-    // });
+  const data = new google.visualization.DataTable();
+  data.addColumn('string', 'Rating');
+  data.addColumn('number', 'Votes');
 
-    
-    console.log(ratingMap);
-    for(let i = 1; i < 6; i++) {
-      console.log(ratingMap[i]);
-      data.addRow([i.toString(), ratingMap[i]]);
-    }
- 
-    const options = {
-      'title': 'Store Ratings',
-      'width':600,
-      'height':500
-    };
- 
-    const chart = new google.visualization.BarChart(
-        document.getElementById('chart-container'));
-    chart.draw(data, options);
-    // });
+  for(let i = 1; i < 6; i++) {
+    data.addRow([i.toString(), ratingMap[i]]);
+  }
+
+  const options = {
+    'title': 'Store Ratings',
+    'width':600,
+    'height':500
+  };
+
+  const chart = new google.visualization.BarChart(
+    document.getElementById('chart-container'));
+  chart.draw(data, options);
 }
 
 
@@ -59,10 +50,8 @@ function loadStoreInfo()
 function loadRatings() {
   var url = new URL('/comment', "https://" + window.location.hostname);
   var params = {store: localStorage.getItem("store")};
-  console.log(localStorage.getItem("store"));
   url.search = new URLSearchParams(params).toString();
   fetch(url).then(response => response.json()).then((drinks) => {
-    console.log(drinks)
     const ratingListElement = document.getElementById('comment-list');
     ratingListElement.innerHTML = "";
     initializeChart();
@@ -79,20 +68,16 @@ function loadRatings() {
 
 function initializeChart() {
   for(let i = 1; i < 6; i++) {
-    console.log(typeof(i));
     ratingMap[i] = 0;
   }
 }
 
 function addDrinkToChart(drink) {
-  console.log(typeof(drink.rating));
-  console.log(drink.rating)
   ratingMap[drink.rating]++;
 }
 
 /** Creates an <li> element containing text. */
 function createListElement(drink) {
-  console.log(drink);
   const ratingElement = document.createElement('li');
   ratingElement.className = 'drink';
 
@@ -122,6 +107,7 @@ function processComment() {
   });
 }
 
+/** Send new comment to backend to store in database. */
 function storeComment(email) {
   var drink = document.getElementById("drink").value;
   var content = document.getElementById("content").value;
@@ -135,6 +121,7 @@ function storeComment(email) {
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)
   });
+  // Make new comment into a drink object and display on the page
   const drinkObj = new Object();
   drinkObj.drink = drink.toLowerCase();
   drinkObj.rating = rating.options[rating.selectedIndex].value;
@@ -149,6 +136,7 @@ function updateChart() {
   ratingMap[rating.options[rating.selectedIndex].value]++;
 }
 
+/** Clears the input box in coffeeshop.html page. */
 function clearInput() {
   document.getElementById("drink").value = "";
   document.getElementById("content").value = "";
