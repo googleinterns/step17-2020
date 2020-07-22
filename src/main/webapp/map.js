@@ -28,7 +28,6 @@ function createMap() {
         };
         map.setCenter(userPos);
         coffeeShopRequest(userPos);
-        // displayRoute(userPos);
       },
       function() {
         handleLocationError(true, infoWindow, map.getCenter());
@@ -54,9 +53,9 @@ function coffeeShopRequest(userPos) {
 function handleLocationError(browserHasGeolocation, infoWindow, userPos) {
   infoWindow.setPosition(userPos);
   if (browserHasGeolocation) {
-  	infoWindow.setContent("The Geolocation service failed. Please enter a zipcode to view nearby coffee shops.");
+  	infoWindow.setContent("The Geolocation service failed. Please enter a zip code to view nearby coffee shops.");
   } else {
-  	infoWindow.setContent("Your browser doesn't support geolocation. Please enter a zipcode to view nearby coffee shops.");
+  	infoWindow.setContent("Your browser doesn't support geolocation. Please enter a zip code to view nearby coffee shops.");
   }
   infoWindow.open(map);
 }
