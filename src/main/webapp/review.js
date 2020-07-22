@@ -16,7 +16,7 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 var ratingMap = new Map();
 
-// Creates a chart and adds it to the page
+/** Creates a chart and adds it to the page */
 function drawChart() {
   const data = new google.visualization.DataTable();
   data.addColumn('string', 'Rating');
@@ -38,15 +38,13 @@ function drawChart() {
 }
 
 
-// Adds comments to the page
-function loadStoreInfo() 
-{
+/** Adds store information to the page */
+function loadStoreInfo() {
   document.getElementById('title').innerHTML = localStorage.getItem("shopName");
   document.getElementById('address').innerHTML = localStorage.getItem("address");
   loadRatings();
 }
 
-// TODO: WRITE FUNCTION TO FETCH DRINKS AND SHOW THE NAME AND
 function loadRatings() {
   var url = new URL('/comment', "https://" + window.location.hostname);
   var params = {store: localStorage.getItem("store")};
@@ -56,8 +54,7 @@ function loadRatings() {
     ratingListElement.innerHTML = "";
     initializeChart();
 
-    drinks.forEach((drink) => 
-    {
+    drinks.forEach((drink) => {
       ratingListElement.appendChild(createListElement(drink));
       addDrinkToChart(drink);
     })
@@ -66,12 +63,14 @@ function loadRatings() {
   });
 }
 
+/** Initialize all rows on the chart to 0 */
 function initializeChart() {
   for(let i = 1; i < 6; i++) {
     ratingMap[i] = 0;
   }
 }
 
+/** Add to the appropriate row on the chart with given dirnk*/
 function addDrinkToChart(drink) {
   ratingMap[drink.rating]++;
 }
@@ -131,6 +130,7 @@ function storeComment(email) {
   clearInput();
 }
 
+/** Add to the appropriate row on the chart when a new comment is received */
 function updateChart() {
   var rating = document.getElementById("rating");
   ratingMap[rating.options[rating.selectedIndex].value]++;
