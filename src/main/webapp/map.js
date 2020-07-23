@@ -33,8 +33,6 @@ function createMap() {
           radius: '500',
           query: 'coffee shop'
         };
-        console.log(position.coords.latitude,position.coords.longitude);
-        console.log(google.maps.places);
         service = new google.maps.places.PlacesService(map);
         service.textSearch(request, callback);
       },

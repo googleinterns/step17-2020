@@ -94,10 +94,8 @@ function deleteTask(task) {
 function loadRatings() {
   var url = new URL('/comment', "https://" + window.location.hostname);
   var params = {store: localStorage.getItem("store")};
-  console.log(localStorage.getItem("store"));
   url.search = new URLSearchParams(params).toString();
   fetch(url).then(response => response.json()).then((drinks) => {
-    console.log(drinks)
     const ratingListElement = document.getElementById('comment-list');
     ratingListElement.innerHTML = "";
 
@@ -111,7 +109,6 @@ function loadRatings() {
 
 /** Creates an <li> element containing text. */
 function createListElement(drink) {
-  console.log(drink);
   const ratingElement = document.createElement('li');
   ratingElement.className = 'drink';
 
