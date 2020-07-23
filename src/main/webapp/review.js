@@ -28,8 +28,8 @@ function drawChart() {
  
     const options = {
       'title': 'Store Ratings',
-      'width':600,
-      'height':500
+      'width':100,
+      'height':100
     };
  
     const chart = new google.visualization.BarChart(
