@@ -30,7 +30,7 @@ public class UserStatus extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
     UserService userService = UserServiceFactory.getUserService();
-    boolean isLoggedIn = userService.isUserLoggedIn();
+    boolean isLoggedIn= userService.isUserLoggedIn();
     Gson gson = new Gson();
     String json = gson.toJson(isLoggedIn);
     response.getWriter().println(json);
