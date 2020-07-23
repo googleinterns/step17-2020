@@ -89,19 +89,16 @@ function deleteTask(task) {
   fetch('/delete-task', {method: 'POST', body: params});
 }
 
-// TODO: WRITE FUNCTION TO FETCH DRINKS AND SHOW THE NAME AND
+/** Get comments and ratings from the database */
 function loadRatings() {
   var url = new URL('/comment', "https://" + window.location.hostname);
   var params = {store: localStorage.getItem("store")};
-  console.log(localStorage.getItem("store"));
   url.search = new URLSearchParams(params).toString();
   fetch(url).then(response => response.json()).then((drinks) => {
-    console.log(drinks)
     const ratingListElement = document.getElementById('comment-list');
     ratingListElement.innerHTML = "";
 
-    drinks.forEach((drink) => 
-    {
+    drinks.forEach((drink) => {
       ratingListElement.appendChild(createListElement(drink));
     })
 
