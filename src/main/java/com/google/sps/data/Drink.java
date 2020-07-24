@@ -36,12 +36,6 @@ public class Drink {
 
   public double updateAverageRating(String store, String name, double newRating) {
     List<Drink> drinks = DrinkDAO.getDrinksByStore(store);
-    double errorReturnValue = -Double.MAX_VALUE;
-
-    if (drinks == null) {
-      return errorReturnValue;
-    }
-
     Drink drink = null;
 
     for (Drink d : drinks) {
