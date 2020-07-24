@@ -20,12 +20,12 @@ import java.util.HashMap;
 public class Drink {
 
   private final String name;
-  private final long id;
+  private final long drinkID;
   private HashMap<String, Point2D> storeIDtoAvgRating;
 
-  Drink(String name, long id) {
+  Drink(String name, long drinkID) {
     this.name = name;
-    this.id = id;
+    this.drinkID = drinkID;
     this.storeIDtoAvgRating = new HashMap<>();
   }
 
@@ -58,7 +58,7 @@ public class Drink {
   }
 
   public long getID() {
-    return this.id;
+    return this.drinkID;
   }
 
   public double roundToOneDecimalPlace(double num) {
