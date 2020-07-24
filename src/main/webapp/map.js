@@ -95,6 +95,11 @@ function codeAddress() {
   }
 }
 
+/**
+/* Takes a JSON object returned by Places API query
+/* Gets the location and name of the place
+/* Adds a marker at corresponding place on the map
+ */
 function createMarker(place) {
   var marker = new google.maps.Marker({
     map: map,
