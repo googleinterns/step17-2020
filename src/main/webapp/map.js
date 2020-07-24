@@ -28,7 +28,8 @@ function createMap() {
         map.setCenter(userPos);
 
         // Request nearby coffee shop info
-        var request = {
+        // Unit of radius: metres. Maximum allowed is 5000 metres
+        var coffeshopRequest = {
           location: userPos,
           radius: '500',
           query: 'coffee shop'
@@ -36,7 +37,7 @@ function createMap() {
         console.log(position.coords.latitude,position.coords.longitude);
         console.log(google.maps.places);
         service = new google.maps.places.PlacesService(map);
-        service.textSearch(request, callback);
+        service.textSearch(coffeshopRequest, callback);
       },
       function() {
         handleLocationError(true, infoWindow, map.getCenter());
@@ -66,6 +67,11 @@ function callback(results, status) {
   }
 }
 
+/**
+/* Takes a JSON object returned by Places API query
+/* Gets the location and name of the place
+/* Adds a marker at corresponding place on the map
+ */
 function createMarker(place) {
   var marker = new google.maps.Marker({
     map: map,

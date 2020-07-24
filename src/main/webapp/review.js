@@ -1,4 +1,4 @@
-// Copyright 2020 Google LLC
+/// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,9 +28,8 @@ function drawChart() {
  
     const options = {
       'title': 'Store Ratings',
-      'width':600,
-      'height':500,
-      'legend':'none'
+      'width':100,
+      'height':100
     };
  
     const chart = new google.visualization.BarChart(
@@ -90,19 +89,16 @@ function deleteTask(task) {
   fetch('/delete-task', {method: 'POST', body: params});
 }
 
-
+/** Get comments and ratings from the database */
 function loadRatings() {
   var url = new URL('/comment', "https://" + window.location.hostname);
   var params = {store: localStorage.getItem("store")};
-  console.log(localStorage.getItem("store"));
   url.search = new URLSearchParams(params).toString();
   fetch(url).then(response => response.json()).then((drinks) => {
-    console.log(drinks)
     const ratingListElement = document.getElementById('comment-list');
     ratingListElement.innerHTML = "";
 
-    drinks.forEach((drink) => 
-    {
+    drinks.forEach((drink) => {
       ratingListElement.appendChild(createListElement(drink));
     })
 

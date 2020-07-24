@@ -21,12 +21,16 @@ public class Comment {
   private final long rating;
   private final String drink;
   private final String content;
+  private final String store;
+  private final String email;
 
-  public Comment(long id, long rating, String drink, String content) {
+  public Comment(long id, long rating, String drink, String content, String store, String email) {
     this.id = id;
     this.rating = rating;
     this.drink = drink;
     this.content = content;
+    this.store = store;
+    this.email = email;
   }
 
   public long getId() {
@@ -43,5 +47,13 @@ public class Comment {
 
   public String getContent() {
     return content;
+  }
+
+  public String getStore() {
+    return store;
+  }
+
+  public String getEmail() {
+    return email;
   }
 }
