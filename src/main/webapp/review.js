@@ -28,9 +28,8 @@ function drawChart() {
  
     const options = {
       'title': 'Store Ratings',
-      'width':600,
-      'height':500,
-      'legend':'none'
+      'width':100,
+      'height':100
     };
  
     const chart = new google.visualization.BarChart(
@@ -90,7 +89,7 @@ function deleteTask(task) {
   fetch('/delete-task', {method: 'POST', body: params});
 }
 
-
+/** Get comments and ratings from the database */
 function loadRatings() {
   var url = new URL('/comment', "https://" + window.location.hostname);
   var params = {store: localStorage.getItem("store")};
@@ -99,8 +98,7 @@ function loadRatings() {
     const ratingListElement = document.getElementById('comment-list');
     ratingListElement.innerHTML = "";
 
-    drinks.forEach((drink) => 
-    {
+    drinks.forEach((drink) => {
       ratingListElement.appendChild(createListElement(drink));
     })
 
@@ -109,6 +107,7 @@ function loadRatings() {
 
 /** Creates an <li> element containing text. */
 function createListElement(drink) {
+  console.log(drink);
   const ratingElement = document.createElement('li');
   ratingElement.className = 'drink';
 

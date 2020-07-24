@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ public class UserInfo extends HttpServlet {
     response.setContentType("application/json");
     UserService userService = UserServiceFactory.getUserService();
     String email = userService.getCurrentUser().getEmail();
-
     Gson gson = new Gson();
     String json = gson.toJson(email);
     response.getWriter().println(json);
