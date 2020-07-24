@@ -30,10 +30,9 @@ public class UserInfo extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
     UserService userService = UserServiceFactory.getUserService();
-    String EMAIL = userService.getCurrentUser().getEmail();
-
+    String email = userService.getCurrentUser().getEmail();
     Gson gson = new Gson();
-    String json = gson.toJson(EMAIL);
+    String json = gson.toJson(email);
     response.getWriter().println(json);
   }
 }
