@@ -41,15 +41,15 @@ public class StoreRatingServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
     Gson gson = new Gson();
-    String json = gson.toJson(votes);
+    String json = gson.toJson(ratingsToVotes);
     response.getWriter().println(json);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String rating = request.getParameter("store-rating");
-    int currentVotes = votes.get(rating);
-    votes.put(rating, currentVotes + 1);
+    int currentVotes = ratingsToVotes.get(rating);
+    ratingsToVotes.put(rating, currentVotes + 1);
 
     response.sendRedirect("coffeeshop.html");
   }

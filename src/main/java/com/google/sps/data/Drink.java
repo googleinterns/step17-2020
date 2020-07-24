@@ -14,66 +14,63 @@
 
 package com.google.sps.data;
 
-import java.awt.geom.Point2D;
-import java.util.HashMap;
+import com.google.appengine.api.datastore.Entity;
+import com.google.gson.*;
+import java.util.List;
 
 public class Drink {
 
   private final String name;
-  private final String id;
-  public HashMap<String, Point2D> storeIDToAvgRating;
+  private final String storeID;
+  private double avgRating;
+  private double numRatings;
+  Entity drinkEntity;
 
-  Drink(String name, String id) {
+  Drink(String name, String storeID, double avgRating, double numRatings, Entity drinkEntity) {
     this.name = name;
-    this.id = id;
-    this.storeIDToAvgRating = new HashMap<>();
+    this.storeID = storeID;
+    this.avgRating = avgRating;
+    this.numRatings = numRatings;
+    this.drinkEntity = drinkEntity;
   }
 
-  // TODO: COMPLETE THIS METHOD
-  public Drink searchForDrink(String name) {
-    /*
-     for (min(all stores y returned by Google Map, HashSet of storeID)) {
-    Check if the HashSet (or Google Map result) contains y
-        If yes {
-         Get y location;
-         Calculate distance/ Retrieving rating
-        }
-       }
-     */
-    return null;
-  }
+  /*
+  public HashMap<Long, Point2D> searchForDrink(String name) {
+    Drink drink = DrinkDAO.getDrinksByName(this.nameToDrinkID.get(name));
 
-  // TODO: DATASTORE
+    return drink.storeIDToAvgRating;
+  }*/
 
-  public double updateAverageRating(String id, double newRating) {
-    Point2D ratings = storeIDToAvgRating.get(id);
-    double numRatings = ratings.getX();
-    double averageRating = ratings.getY();
+  public double updateAverageRating(String store, String name, double newRating) {
+    List<Drink> drinks = DrinkDAO.getDrinksByStore(store);
     double errorReturnValue = -Double.MAX_VALUE;
 
-    if (newRating == 0.0) {
+    if (drinks == null || newRating == 0.0) {
       return errorReturnValue;
     }
 
-    if (numRatings == 0.0) {
-      ratings.setLocation(1.0, newRating);
-      storeIDToAvgRating.put(id, ratings);
-      return newRating;
+    Drink drink = null;
+
+    for (Drink d : drinks) {
+      if (name.equals(d.name)) {
+        drink = d;
+        break;
+      }
     }
 
-    averageRating = ((averageRating * numRatings) + newRating) / (numRatings + 1);
-    averageRating = roundToOneDecimalPlace(averageRating);
-    ratings.setLocation(numRatings + 1, averageRating);
+    drink.avgRating = ((drink.avgRating * drink.numRatings) + newRating) / (drink.numRatings + 1);
+    drink.numRatings++;
+    DrinkDAO.updateEntity(drinkEntity, drink.numRatings, drink.avgRating);
 
-    return averageRating;
+    return drink.avgRating;
   }
 
   public String getName() {
     return this.name;
   }
 
-  public String getID() {
-    return this.id;
+  public String getStore() {
+    return this.storeID;
   }
 
   public double roundToOneDecimalPlace(double num) {
