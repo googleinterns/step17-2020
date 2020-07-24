@@ -40,6 +40,7 @@ function createMap() {
 }
 
 // Request nearby coffee shop info
+// Unit of radius: metres. Maximum allowed is 50000 metres
 function coffeeShopRequest(userPos) {
 	var request = {
     location: userPos,
