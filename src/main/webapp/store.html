@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <title>Coffee Shops Around Me</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
     <script src="map.js"></script>
   </head>
-  <body onload="createMap();" id="background">
-    <a href="index.html" class="button">Home</a>
-    <a href="user.html" class="button">User</a>
-    <a href="store.html" class="button">Stores</a>
+  <body onload="createMap(); determineLogin();" id="background">
+    <nav id="navbar">
+        <a href="index.html" class="button">Home</a>
+        <a href="user.html" class="button">Profile</a>
+        <a href="store.html" id= "active" class="button">Explore</a>
+    </nav>
+    <nav id="loginbar">
+      <div id="form"></div>
+      <div id="login-container"></div>
+      <div id="EMAIL"></div>
+    </nav>
     <div id="map"></div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-3acBoJ17cFd3-8vYCyKTeYT5cVtfHfI&libraries=places"async defer></script>
   </body>

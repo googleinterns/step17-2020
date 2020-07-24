@@ -9,10 +9,19 @@
     <script src="map.js"></script>
     <script src="script.js"></script>
   </head>
-  <body onload="loadStoreInfo();" id= "background">
-    <a href="index.html" class="button">Home</a>
-    <a href="user.html" class="button">User</a>
-    <a href="store.html" class="button">Stores</a>
+
+  <body onload="loadStoreInfo(); determineLogin();" id= "background">
+    
+<nav id="navbar">
+   <a href="index.html" class="button">Home</a>
+   <a href="user.html" class="button">Profile</a>
+   <a href="store.html" id="active" class="button">Explore</a> 
+</nav>
+<nav id="loginbar">
+      <div id="form"></div>
+      <div id="login-container"></div>
+      <div id="email"></div>
+</nav>
 
     <h1 id='title'></h1>
     <h3 id='address'></h3>
@@ -33,6 +42,7 @@
     <option value="2">2</option>
     <option value="1">1</option>
     </select>
+
     <button id="comment" onclick="processComment();">Submit</button>
     <ul id="comment-list"></ul>
  
