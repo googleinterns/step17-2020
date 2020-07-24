@@ -45,7 +45,6 @@ public class DrinkDAO {
     return new Drink(name, storeID, avgRating, numRatings, drinkEntity);
   }
 
-  // Retrieves a drink entity from datastore with the specific drink name
   public static List<Drink> getDrinksByStore(String storeID) {
     Query query = new Query("Drink").addFilter("store", Query.FilterOperator.EQUAL, storeID);
     PreparedQuery results = getDatastore().prepare(query);
