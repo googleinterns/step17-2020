@@ -34,13 +34,6 @@ public class Drink {
     this.drinkEntity = drinkEntity;
   }
 
-  /*
-  public String searchForDrink(String name) {
-    Drink drink = DrinkDAO.getDrinksByName();
-
-    return ;
-  }*/
-
   public double updateAverageRating(String store, String name, double newRating) {
     List<Drink> drinks = DrinkDAO.getDrinksByStore(store);
     double errorReturnValue = -Double.MAX_VALUE;
