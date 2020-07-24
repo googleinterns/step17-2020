@@ -35,17 +35,17 @@ public class Drink {
   }
 
   /*
-  public HashMap<Long, Point2D> searchForDrink(String name) {
-    Drink drink = DrinkDAO.getDrinksByName(this.nameToDrinkID.get(name));
+  public String searchForDrink(String name) {
+    Drink drink = DrinkDAO.getDrinksByName();
 
-    return drink.storeIDToAvgRating;
+    return ;
   }*/
 
   public double updateAverageRating(String store, String name, double newRating) {
     List<Drink> drinks = DrinkDAO.getDrinksByStore(store);
     double errorReturnValue = -Double.MAX_VALUE;
 
-    if (drinks == null || newRating == 0.0) {
+    if (drinks == null) {
       return errorReturnValue;
     }
 
@@ -74,8 +74,6 @@ public class Drink {
   }
 
   public double roundToOneDecimalPlace(double num) {
-    if (num < 1.0) return 0.0;
-
     return Math.round(num * 10) / 10.0;
   }
 }
