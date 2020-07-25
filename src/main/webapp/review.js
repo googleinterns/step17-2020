@@ -107,7 +107,6 @@ function loadRatings() {
 
 /** Creates an <li> element containing text. */
 function createListElement(drink) {
-  console.log(drink);
   const ratingElement = document.createElement('li');
   ratingElement.className = 'drink';
 
