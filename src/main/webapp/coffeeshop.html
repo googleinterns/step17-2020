@@ -9,6 +9,7 @@
     <script src="map.js"></script>
     <script src="script.js"></script>
   </head>
+
   <body onload="loadStoreInfo(); determineLogin();" id= "background">
     
 <nav id="navbar">
@@ -41,8 +42,8 @@
     <option value="2">2</option>
     <option value="1">1</option>
     </select>
-    <button id="comment" onclick="storeComment();">Submit</button>
-    <button onclick="loadRatings();">Click here to see ratings</button>
+
+    <button id="comment" onclick="processComment();">Submit</button>
     <ul id="comment-list"></ul>
  
     <div id="task-list"></div>
