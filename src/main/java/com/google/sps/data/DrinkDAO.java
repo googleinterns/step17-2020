@@ -25,11 +25,7 @@ import java.util.List;
 
 public class DrinkDAO {
 
-  private static DatastoreService drinkDAO = getDatastore();
-
-  private static DatastoreService getDatastore() {
-    return DatastoreServiceFactory.getDatastoreService();
-  }
+  private static DatastoreService drinkDataStore = DatastoreServiceFactory.getDatastoreService();
 
   public static Drink saveDrink(String name, double avgRating, double numRatings, String storeID) {
     Entity drinkEntity = new Entity("Drink");
@@ -39,14 +35,14 @@ public class DrinkDAO {
     drinkEntity.setProperty("numRatings", numRatings);
     drinkEntity.setProperty("store", storeID);
 
-    drinkDAO.put(drinkEntity);
+    drinkDataStore.put(drinkEntity);
 
     return new Drink(name, storeID, avgRating, numRatings, drinkEntity);
   }
 
   public static List<Drink> getDrinksByStore(String storeID) {
     Query query = new Query("Drink").addFilter("store", Query.FilterOperator.EQUAL, storeID);
-    PreparedQuery results = getDatastore().prepare(query);
+    PreparedQuery results = drinkDataStore.prepare(query);
 
     List<Drink> drinksByStore = new ArrayList<>();
 
@@ -63,7 +59,7 @@ public class DrinkDAO {
 
   public static List<Drink> getDrinksByName(String name) {
     Query query = new Query("Drink").addFilter("name", Query.FilterOperator.EQUAL, name);
-    PreparedQuery results = getDatastore().prepare(query);
+    PreparedQuery results = drinkDataStore.prepare(query);
 
     List<Drink> drinkByName = new ArrayList<>();
 

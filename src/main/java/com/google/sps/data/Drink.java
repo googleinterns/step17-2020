@@ -25,8 +25,8 @@ public class Drink implements Comparable<Drink> {
 
   private final String name;
   private final String storeID;
-  public double avgRating;
-  public double numRatings;
+  private double avgRating;
+  private double numRatings;
   Entity drinkEntity;
 
   Drink(String name, String storeID, double avgRating, double numRatings, Entity drinkEntity) {
@@ -56,9 +56,7 @@ public class Drink implements Comparable<Drink> {
   public static Set<Drink> searchForDrink(String name) {
     List<Drink> drinks = DrinkDAO.getDrinksByName(name);
     Set<Drink> drinksSet = new HashSet<Drink>();
-    for (Drink drink : drinks) {
-      drinksSet.add(drink);
-    }
+    drinksSet.addAll(drinks);
     return drinksSet;
   }
 
