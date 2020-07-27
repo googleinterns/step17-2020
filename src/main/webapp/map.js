@@ -152,6 +152,7 @@ function clearMarkers() {
   markers = [];
 }
 
+/* Calculates the straight line distance between two sets of latitute and longitude */
 function haversine_distance(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
@@ -170,21 +171,10 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
-function calcRoute(userPos, coffeeShop) {
-	var directionsService = new google.maps.DirectionsService();
-  var request = {
-    origin: userPos,
-    destination: coffeeShop.geometry.location,
-    travelMode: 'WALKING'
-  };
-  directionsService.route(request, function(result, status) {
-    if (status == 'OK') {
-      coffeeShopInfo.push(coffeeShop.name, 
-      	coffeeShop.formatted_address, result.routes[0].legs[0].distance.text);
-    }
-  });
-}
-
+/**
+/* Gets the location and name of the place
+/* and displays the walking route on Google Map
+ */
 function displayRoute(userPos, coffeeShop) {
   var directionsDisplay = new google.maps.DirectionsRenderer();
   directionsDisplay.setMap(map);
