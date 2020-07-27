@@ -11,11 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-/*
+
 package com.google.sps.data;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import java.util.List;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,22 +26,28 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public final class DrinkDAOTest {
-
   private final String DRINK_NAME = "black coffee";
-  private final String DRINK_NAME_B = "latte";
-  private final String DRINK_NAME_C = "water";
-  private final String DRINK_NAME_D = "frappacino";
 
-  private static final double EPSILON = 0.001;
+  private final String storeIDA = "A";
+  private final String storeIDB = "B";
+  private final String storeIDC = "C";
+  private final String storeIDD = "D";
+  private final String storeIDE = "E";
 
-  private static final double RATING = 5.0;
-  private static final double NUM_RATINGS = 1.0;
-  private static final double NEW_RATING = 1.0;
-  private static final long STORE_ID_A = 1;
-  private static final long STORE_ID_B = 2;
-  private static final long STORE_ID_C = 3;
-  private static final long STORE_ID_D = 4;
-  private static final long STORE_ID_E = 5;
+  private double numRatingsA = 29.0;
+  private double numRatingsB = 16.0;
+  private double numRatingsC = 48.0;
+  private double numRatingsD = 5.0;
+  private double numRatingsE = 33.0;
+
+  private double ratingA = 2.5;
+  private double ratingB = 1.6;
+  private double ratingC = 4.1;
+  private double ratingD = 5.0;
+  private double ratingE = 3.2;
+
+  private final double NEW_RATING = 5.0;
+  private final double EPSILON = 0.001;
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
@@ -56,18 +63,32 @@ public final class DrinkDAOTest {
   }
 
   @Test
-  public void testUpdateAverageRating() {
-    Drink drink = DrinkDAO.saveDrink(DRINK_NAME, RATING, NUM_RATINGS, STORE_ID_A);
-    double actual = drink.updateAverageRating(STORE_ID_A, NEW_RATING);
-    double expected = 3.0;
-    Assert.assertEquals(actual, expected, EPSILON);
+  public void testSearchForDrink() {
+    Drink a = DrinkDAO.saveDrink(DRINK_NAME, ratingA, numRatingsA, storeIDA);
+    Drink b = DrinkDAO.saveDrink(DRINK_NAME, ratingB, numRatingsB, storeIDB);
+    Drink c = DrinkDAO.saveDrink(DRINK_NAME, ratingC, numRatingsC, storeIDC);
+    Drink d = DrinkDAO.saveDrink(DRINK_NAME, ratingD, numRatingsD, storeIDD);
+    Drink e = DrinkDAO.saveDrink(DRINK_NAME, ratingE, numRatingsE, storeIDE);
+
+    List<Drink> drinks = Drink.searchForDrink(DRINK_NAME);
+    Drink resultD = drinks.get(0);
+    Drink resultC = drinks.get(1);
+    Drink resultE = drinks.get(2);
+    Drink resultA = drinks.get(3);
+    Drink resultB = drinks.get(4);
+
+    Assert.assertEquals(d.getStore(), resultD.getStore());
+    Assert.assertEquals(c.getStore(), resultC.getStore());
+    Assert.assertEquals(e.getStore(), resultE.getStore());
+    Assert.assertEquals(a.getStore(), resultA.getStore());
+    Assert.assertEquals(b.getStore(), resultB.getStore());
   }
 
   @Test
-  public void testGetStoresWithDrink() {
-    Drink drinkA = DrinkDAO.saveDrink(DRINK_NAME, RATING, NUM_RATINGS, STORE_ID_A);
-    Drink drinkB = DrinkDAO.getDrinkByID(drinkA.getID());
-    Assert.assertEquals(drinkA.getName(), drinkB.getName());
+  public void testUpdateAverageRating() {
+    Drink a = DrinkDAO.saveDrink(DRINK_NAME, ratingA, numRatingsA, storeIDA);
+    a.updateAverageRating(NEW_RATING);
+    double expected = 2.5833;
+    Assert.assertEquals(expected, a.getRating(), EPSILON);
   }
 }
-*/

@@ -16,14 +16,15 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.*;
+import java.util.Collections;
 import java.util.List;
 
-public class Drink {
+public class Drink implements Comparable<Drink> {
 
   private final String name;
   private final String storeID;
-  private double avgRating;
-  private double numRatings;
+  public double avgRating;
+  public double numRatings;
   Entity drinkEntity;
 
   Drink(String name, String storeID, double avgRating, double numRatings, Entity drinkEntity) {
@@ -34,22 +35,28 @@ public class Drink {
     this.drinkEntity = drinkEntity;
   }
 
-  public double updateAverageRating(String store, String name, double newRating) {
-    List<Drink> drinks = DrinkDAO.getDrinksByStore(store);
-    Drink drink = null;
+  @Override
+  public int compareTo(Drink d) {
+    return new Double(avgRating).compareTo(d.avgRating);
+  }
 
-    for (Drink d : drinks) {
-      if (name.equals(d.name)) {
-        drink = d;
-        break;
-      }
-    }
+  @Override
+  public String toString() {
+    return String.valueOf(avgRating);
+  }
 
-    drink.avgRating = ((drink.avgRating * drink.numRatings) + newRating) / (drink.numRatings + 1);
-    drink.numRatings++;
-    DrinkDAO.updateEntity(drinkEntity, drink.numRatings, drink.avgRating);
+  public static List<Drink> searchForDrink(String name) {
+    List<Drink> drinks = DrinkDAO.getDrinksByName(name);
+    Collections.sort(drinks, Collections.reverseOrder());
+    return drinks;
+  }
 
-    return drink.avgRating;
+  public double updateAverageRating(double newRating) {
+    this.avgRating = ((this.avgRating * this.numRatings) + newRating) / (this.numRatings + 1);
+    this.numRatings++;
+    DrinkDAO.updateEntity(this.drinkEntity, this.numRatings, this.avgRating);
+
+    return this.avgRating;
   }
 
   public String getName() {
@@ -58,6 +65,14 @@ public class Drink {
 
   public String getStore() {
     return this.storeID;
+  }
+
+  public double getNumRatings() {
+    return this.numRatings;
+  }
+
+  public double getRating() {
+    return this.avgRating;
   }
 
   public double roundToOneDecimalPlace(double num) {

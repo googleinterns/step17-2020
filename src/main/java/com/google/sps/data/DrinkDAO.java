@@ -31,8 +31,7 @@ public class DrinkDAO {
     return DatastoreServiceFactory.getDatastoreService();
   }
 
-  public static Drink createDrink(
-      String name, double avgRating, double numRatings, String storeID) {
+  public static Drink saveDrink(String name, double avgRating, double numRatings, String storeID) {
     Entity drinkEntity = new Entity("Drink");
 
     drinkEntity.setProperty("name", name);

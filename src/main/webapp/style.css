@@ -1,15 +1,27 @@
 .button {
  text-align: center;
- background-color: lightblue;
+ background-color: pink;
  margin: 8px 4px;
  font-size: 30px;
- border:black;
 }
 
 #map {
+  text-align: center;
   border: thin solid black;
   height: 500px;
   width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#chart-container{
+    border: thin solid black;
+    height:100px;
+    width:100px;
+    margin-left:auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 #background {
@@ -19,15 +31,16 @@
     text-align: center;
 }
 
-.inline{
-    display: inline;
+#active{
+    background-color: lightblue;
+    border:black;
+    font-size:35px;
 }
 
-#chart-container {
-  margin-left: 39%;
-  margin-right: -50%;
-  padding: 0px;
-  width: 0px;
-  border: 0px;
+#navbar{
+    text-align: left;
+}
 
+#loginbar{
+    text-align:right;
 }
