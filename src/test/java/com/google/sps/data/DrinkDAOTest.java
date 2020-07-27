@@ -67,10 +67,12 @@ public final class DrinkDAOTest {
   @Test
   public void testSearchForDrinkByRating() {
     Drink a = DrinkDAO.saveDrink(DRINK_A, ratingA, numRatingsA, storeIDA);
-    Drink b = DrinkDAO.saveDrink(DRINK_A, ratingB, numRatingsB, storeIDA);
-    Drink c = DrinkDAO.saveDrink(DRINK_A, ratingC, numRatingsC, storeIDB);
-    Drink d = DrinkDAO.saveDrink(DRINK_A, ratingD, numRatingsD, storeIDB);
+    Drink b = DrinkDAO.saveDrink(DRINK_A, ratingB, numRatingsB, storeIDB);
+    Drink c = DrinkDAO.saveDrink(DRINK_A, ratingC, numRatingsC, storeIDD);
+    Drink d = DrinkDAO.saveDrink(DRINK_A, ratingD, numRatingsD, storeIDD);
     Drink e = DrinkDAO.saveDrink(DRINK_A, ratingE, numRatingsE, storeIDE);
+    Drink f = DrinkDAO.saveDrink(DRINK_B, ratingA, numRatingsA, storeIDA);
+    Drink g = DrinkDAO.saveDrink(DRINK_B, ratingB, numRatingsB, storeIDB);
 
     List<Drink> drinks = Drink.searchForDrinkByRating(DRINK_A);
     Drink resultD = drinks.get(0);
@@ -82,6 +84,12 @@ public final class DrinkDAOTest {
     Assert.assertEquals(d.getStore(), resultD.getStore());
     Assert.assertEquals(c.getStore(), resultC.getStore());
     Assert.assertEquals(e.getStore(), resultE.getStore());
+    Assert.assertEquals(a.getStore(), resultA.getStore());
+    Assert.assertEquals(b.getStore(), resultB.getStore());
+
+    drinks = Drink.searchForDrinkByRating(DRINK_B);
+    resultA = drinks.get(0);
+    resultB = drinks.get(1);
     Assert.assertEquals(a.getStore(), resultA.getStore());
     Assert.assertEquals(b.getStore(), resultB.getStore());
   }
