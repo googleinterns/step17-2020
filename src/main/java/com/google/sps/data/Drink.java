@@ -17,7 +17,9 @@ package com.google.sps.data;
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.*;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Drink implements Comparable<Drink> {
 
@@ -45,10 +47,19 @@ public class Drink implements Comparable<Drink> {
     return String.valueOf(avgRating);
   }
 
-  public static List<Drink> searchForDrink(String name) {
+  public static List<Drink> searchForDrinkByRating(String name) {
     List<Drink> drinks = DrinkDAO.getDrinksByName(name);
     Collections.sort(drinks, Collections.reverseOrder());
     return drinks;
+  }
+
+  public static Set<Drink> searchForDrink(String name) {
+    List<Drink> drinks = DrinkDAO.getDrinksByName(name);
+    Set<Drink> drinksSet = new HashSet<Drink>();
+    for (Drink drink : drinks) {
+      drinksSet.add(drink);
+    }
+    return drinksSet;
   }
 
   public double updateAverageRating(double newRating) {
