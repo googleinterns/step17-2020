@@ -56,7 +56,5 @@ public class CommentServlet extends HttpServlet {
     String email = request.getParameter("email");
 
     CommentDAO.storeComment(rating, drink, content, store, email);
-
-    // response.sendRedirect("/coffeeshop.html");
   }
 }
