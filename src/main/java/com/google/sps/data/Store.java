@@ -1,9 +1,9 @@
 public class Store {
   private String id;
-  private long lat;
-  private long lng;
+  private double lat;
+  private double lng;
 
-  public Store(String id, long lat, long lng) {
+  public Store(String id, double lat, double lng) {
     this.id = id;
     this.lat = lat;
     this.lng = lng;
@@ -13,11 +13,11 @@ public class Store {
     return id;
   }
 
-  public long getLat() {
+  public double getLat() {
     return lat;
   }
 
-  public long getLng() {
+  public double getLng() {
     return lng;
   }
 }

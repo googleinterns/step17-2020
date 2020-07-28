@@ -2,7 +2,8 @@ var map;
 var infoWindow;
 var shopInfo;
 var userPos;
-// require('dotenv').config();
+var geocoder;
+var markers = [];
 
 /** Creates a map that shows all coffee shops around the user. */
 function createMap() {
@@ -10,7 +11,7 @@ function createMap() {
   var newyork = new google.maps.LatLng(40.7128, -74.0060);
   map = new google.maps.Map(
     document.getElementById('map'),
-    {center: newyork, zoom: 14});
+    {center: newyork, zoom: 13});
   
   // Infowindow for to handle error in get user location
   infoWindow = new google.maps.InfoWindow();
@@ -26,17 +27,7 @@ function createMap() {
           lng: position.coords.longitude
         };
         map.setCenter(userPos);
-
-        // Request nearby coffee shop info
-        var request = {
-          location: userPos,
-          radius: '500',
-          query: 'coffee shop'
-        };
-        console.log(position.coords.latitude,position.coords.longitude);
-        console.log(google.maps.places);
-        service = new google.maps.places.PlacesService(map);
-        service.textSearch(request, callback);
+        coffeeShopRequest(userPos);
       },
       function() {
         handleLocationError(true, infoWindow, map.getCenter());
@@ -48,24 +39,68 @@ function createMap() {
   }
 }
 
+// Request nearby coffee shop info
+// Unit of radius: metres. Maximum allowed is 50000 metres
+function coffeeShopRequest(userPos) {
+	var request = {
+    location: userPos,
+    radius: '300',
+    query: 'coffee shop'
+  };
+  service = new google.maps.places.PlacesService(map);
+  service.textSearch(request, callback);
+}
+
 function handleLocationError(browserHasGeolocation, infoWindow, userPos) {
   infoWindow.setPosition(userPos);
-  infoWindow.setContent(
-    browserHasGeolocation
-      ? "Error: The Geolocation service failed."
-      : "Error: Your browser doesn't support geolocation."
-  );
+  if (browserHasGeolocation) {
+  	infoWindow.setContent("The Geolocation service failed. Please enter a zip code to view nearby coffee shops.");
+  } else {
+  	infoWindow.setContent("Your browser doesn't support geolocation. Please enter a zip code to view nearby coffee shops.");
+  }
   infoWindow.open(map);
 }
 
-function callback(results, status) {
+// Call this wherever needed to actually handle the display
+function codeAddress() {
+	// Clear markers from previous search results
+	clearMarkers();
+	geocoder = new google.maps.Geocoder();
+	var zipCode = document.getElementById("zipcode").value;
+    geocoder.geocode( {
+      componentRestrictions: {
+        country: 'US',
+        postalCode: zipCode
+      }
+    }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        //Got result, center the map and put it out there
+        map.setCenter(results[0].geometry.location);
+        userPos = {
+          lat: results[0].geometry.location.lat(),
+          lng: results[0].geometry.location.lng()
+        };
+        coffeeShopRequest(userPos);
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+   });
+}
+  
+ function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     for (var i = 0; i < results.length; i++) {
-      createMarker(results[i]);
+        createMarker(results[i]);
     }
+    displayMarkers();
   }
 }
 
+/**
+/* Takes a JSON object returned by Places API query
+/* Gets the location and name of the place
+/* Adds a marker at corresponding place on the map
+ */
 function createMarker(place) {
   var marker = new google.maps.Marker({
     map: map,
@@ -81,9 +116,18 @@ function createMarker(place) {
     localStorage.setItem("store", place.place_id);
     shopInfo.open(map, marker);
   });
+  markers.push(marker);
 }
 
-function getShopName() {
-  document.getElementById('title').innerHTML = localStorage.getItem("shopName");
-  document.getElementById('address').innerHTML = localStorage.getItem("address");
+function displayMarkers() {
+  for (var i = 0; i < markers.length; i++ ) {
+    markers[i].setMap(map);
+  }
+}
+
+function clearMarkers() {
+  for (var i = 0; i < markers.length; i++ ) {
+    markers[i].setMap(null);
+  }
+  markers = [];
 }

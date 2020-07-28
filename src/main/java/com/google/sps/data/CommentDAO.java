@@ -24,13 +24,30 @@ import com.google.gson.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentDatabase {
+public class CommentDAO {
 
-  private static DatastoreService getDatastore() {
-    return DatastoreServiceFactory.getDatastoreService();
+  private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+  /**
+   * This function takes in a PreparedQuery object and converts each entity in the into a comment
+   * object
+   */
+  private static List<Comment> convertQueryEntityToComment(PreparedQuery results) {
+    List<Comment> comments = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      long rating = (long) entity.getProperty("rating");
+      String drink = (String) entity.getProperty("drink");
+      String content = (String) entity.getProperty("content");
+      String store = (String) entity.getProperty("store");
+      String email = (String) entity.getProperty("email");
+
+      comments.add(new Comment(id, rating, drink, content, store, email));
+    }
+    return comments;
   }
 
-  public static Comment createComment(
+  public static Comment storeComment(
       long rating, String drink, String content, String store, String email) {
     Entity commentEntity = new Entity("Comment");
 
@@ -39,9 +56,9 @@ public class CommentDatabase {
     commentEntity.setProperty("content", content);
     commentEntity.setProperty("store", store);
     commentEntity.setProperty("email", email);
-    getDatastore().put(commentEntity);
+    datastore.put(commentEntity);
     long commentID = commentEntity.getKey().getId();
-    return new Comment(commentID, rating, drink, content, email);
+    return new Comment(commentID, rating, drink, content, store, email);
   }
 
   public static Comment getCommentByID(long commentID) {
@@ -49,7 +66,7 @@ public class CommentDatabase {
         new Query("Comment")
             .addFilter(
                 "__key__", Query.FilterOperator.EQUAL, KeyFactory.createKey("Comment", commentID));
-    Entity commentEntity = getDatastore().prepare(query).asSingleEntity();
+    Entity commentEntity = datastore.prepare(query).asSingleEntity();
 
     if (commentEntity == null) {
       return null;
@@ -58,46 +75,21 @@ public class CommentDatabase {
     long rating = (long) commentEntity.getProperty("rating");
     String drink = (String) commentEntity.getProperty("drink");
     String content = (String) commentEntity.getProperty("content");
+    String store = (String) commentEntity.getProperty("store");
     String email = (String) commentEntity.getProperty("email");
 
-    return new Comment(commentID, rating, drink, content, email);
+    return new Comment(commentID, rating, drink, content, store, email);
   }
 
   public static List<Comment> getCommentByStore(String storeID) {
     Query query = new Query("Comment").addFilter("store", Query.FilterOperator.EQUAL, storeID);
-    PreparedQuery results = getDatastore().prepare(query);
-
-    List<Comment> commentByStore = new ArrayList<>();
-
-    for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      long rating = (long) entity.getProperty("rating");
-      String drink = (String) entity.getProperty("drink");
-      String content = (String) entity.getProperty("content");
-      String email = (String) entity.getProperty("email");
-
-      commentByStore.add(new Comment(id, rating, drink, content, email));
-    }
-
-    return commentByStore;
+    PreparedQuery results = datastore.prepare(query);
+    return convertQueryEntityToComment(results);
   }
 
   public static List<Comment> getCommentByEmail(String email) {
     Query query = new Query("Comment").addFilter("email", Query.FilterOperator.EQUAL, email);
-    PreparedQuery results = getDatastore().prepare(query);
-
-    List<Comment> commentByEmail = new ArrayList<>();
-
-    for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      long rating = (long) entity.getProperty("rating");
-      String drink = (String) entity.getProperty("drink");
-      String content = (String) entity.getProperty("content");
-      email = (String) entity.getProperty("email");
-
-      commentByEmail.add(new Comment(id, rating, drink, content, email));
-    }
-
-    return commentByEmail;
+    PreparedQuery results = datastore.prepare(query);
+    return convertQueryEntityToComment(results);
   }
 }
