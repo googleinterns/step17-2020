@@ -27,6 +27,22 @@ public class DrinkDAO {
 
   private static DatastoreService drinkDataStore = DatastoreServiceFactory.getDatastoreService();
 
+  private static List<Drink> getDrinks(Query query) {
+    PreparedQuery results = drinkDataStore.prepare(query);
+    List<Drink> drinks = new ArrayList<>();
+
+    for (Entity drinkEntity : results.asIterable()) {
+      double numRatings = (double) drinkEntity.getProperty("numRatings");
+      double avgRating = (double) drinkEntity.getProperty("rating");
+      String storeID = (String) drinkEntity.getProperty("store");
+      String name = (String) drinkEntity.getProperty("name");
+
+      drinks.add(new Drink(name, storeID, avgRating, numRatings, drinkEntity));
+    }
+
+    return drinks;
+  }
+
   public static Drink saveDrink(String name, double avgRating, double numRatings, String storeID) {
     Entity drinkEntity = new Entity("Drink");
 
@@ -42,35 +58,13 @@ public class DrinkDAO {
 
   public static List<Drink> getDrinksByStore(String storeID) {
     Query query = new Query("Drink").addFilter("store", Query.FilterOperator.EQUAL, storeID);
-    PreparedQuery results = drinkDataStore.prepare(query);
-
-    List<Drink> drinksByStore = new ArrayList<>();
-
-    for (Entity drinkEntity : results.asIterable()) {
-      double numRatings = (double) drinkEntity.getProperty("numRatings");
-      double avgRating = (double) drinkEntity.getProperty("rating");
-      String name = (String) drinkEntity.getProperty("name");
-
-      drinksByStore.add(new Drink(name, storeID, avgRating, numRatings, drinkEntity));
-    }
-
+    List<Drink> drinksByStore = getDrinks(query);
     return drinksByStore;
   }
 
   public static List<Drink> getDrinksByName(String name) {
     Query query = new Query("Drink").addFilter("name", Query.FilterOperator.EQUAL, name);
-    PreparedQuery results = drinkDataStore.prepare(query);
-
-    List<Drink> drinkByName = new ArrayList<>();
-
-    for (Entity drinkEntity : results.asIterable()) {
-      double numRatings = (double) drinkEntity.getProperty("numRatings");
-      double avgRating = (double) drinkEntity.getProperty("rating");
-      String storeID = (String) drinkEntity.getProperty("store");
-
-      drinkByName.add(new Drink(name, storeID, avgRating, numRatings, drinkEntity));
-    }
-
+    List<Drink> drinkByName = getDrinks(query);
     return drinkByName;
   }
 
