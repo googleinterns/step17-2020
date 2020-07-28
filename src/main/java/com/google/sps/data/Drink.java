@@ -29,7 +29,8 @@ public class Drink implements Comparable<Drink> {
   private double numRatings;
   Entity drinkEntity;
 
-  Drink(String name, String storeID, double avgRating, double numRatings, Entity drinkEntity) {
+  public Drink(
+      String name, String storeID, double avgRating, double numRatings, Entity drinkEntity) {
     this.name = name;
     this.storeID = storeID;
     this.avgRating = avgRating;
