@@ -43,7 +43,44 @@ public class DrinkDAO {
     return drinks;
   }
 
+  // This method checks if a List containing Drinks with the same name and a List containing
+  // Drinks from the same store have a Drink in common, indicating making a new Drink would
+  // cause duplicates.
+  private static Drink preventDuplicates(List<Drink> drinksByName, List<Drink> drinksByStore) {
+    Drink drink = null;
+
+    for (Drink d1 : drinksByName) {
+      for (Drink d2 : drinksByStore) {
+        String name1 = d1.getName();
+        String name2 = d2.getName();
+
+        if (name1.equals(name2)) {
+          String store1 = d1.getStore();
+          String store2 = d2.getStore();
+
+          if (store1.equals(store2)) {
+            drink = d1;
+            return drink;
+          }
+        }
+      }
+    }
+    return drink;
+  }
+
   public static Drink saveDrink(String name, double avgRating, double numRatings, String storeID) {
+
+    List<Drink> drinksByName = getDrinksByName(name);
+    List<Drink> drinksByStore = getDrinksByStore(storeID);
+    Drink drink = preventDuplicates(drinksByName, drinksByStore);
+
+    // This means that executing the following lines below would create a new duplicate drink
+    // Instead of doing that update the existing drink
+    if (drink != null) {
+      drink.updateAverageRating(avgRating);
+      return drink;
+    }
+
     Entity drinkEntity = new Entity("Drink");
 
     drinkEntity.setProperty("name", name);
@@ -58,14 +95,12 @@ public class DrinkDAO {
 
   public static List<Drink> getDrinksByStore(String storeID) {
     Query query = new Query("Drink").addFilter("store", Query.FilterOperator.EQUAL, storeID);
-    List<Drink> drinksByStore = getDrinks(query);
-    return drinksByStore;
+    return getDrinks(query);
   }
 
   public static List<Drink> getDrinksByName(String name) {
     Query query = new Query("Drink").addFilter("name", Query.FilterOperator.EQUAL, name);
-    List<Drink> drinkByName = getDrinks(query);
-    return drinkByName;
+    return getDrinks(query);
   }
 
   public static void updateEntity(Entity drinkEntity, double numRatings, double rating) {
