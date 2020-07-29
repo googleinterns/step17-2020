@@ -40,8 +40,10 @@ function createMap() {
   }
 }
 
-// Request nearby coffee shop info
-// Unit of radius: metres. Maximum allowed is 50000 metres
+/**
+/* Request nearby coffee shop info
+/* Unit of radius: Metres. Maximum allowed is 50000 metres
+ */
 function coffeeShopRequest(userPos) {
 	var request = {
     location: userPos,
@@ -62,7 +64,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, userPos) {
   infoWindow.open(map);
 }
 
-// Call this wherever needed to actually handle the display
+/* Call this wherever needed to actually handle the display */
 function codeAddress() {
 	// Clear markers from previous search results
 	clearMarkers();
@@ -75,7 +77,7 @@ function codeAddress() {
       }
     }, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        //Got result, center the map and put it out there
+        // Got result, center the map and put it out there
         map.setCenter(results[0].geometry.location);
         userPos = {
           lat: results[0].geometry.location.lat(),
@@ -142,19 +144,20 @@ function createMarker(place) {
 }
 
 function displayMarkers() {
-  for (var i = 0; i < markers.length; i++ ) {
-    markers[i].setMap(map);
-  }
+  markers.forEach(marker => marker.setMap(map));
 }
 
 function clearMarkers() {
-  for (var i = 0; i < markers.length; i++ ) {
-    markers[i].setMap(null);
-  }
+  markers.forEach(marker => marker.setMap(null));
   markers = [];
 }
 
-/* Calculates the straight line distance between two sets of latitute and longitude */
+/**
+/* Calculates the straight line distance between two
+/* sets of latitutes and longitutes
+/* A breakdown of the haversine formula can be found at
+/* http://www.movable-type.co.uk/scripts/latlong.html
+ */
 function haversine_distance(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = degToRad(lat2-lat1);
@@ -162,8 +165,7 @@ function haversine_distance(lat1,lon1,lat2,lon2) {
   var a = 
     Math.sin(dLat/2) * Math.sin(dLat/2) +
     Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   var d = R * c; // Distance in km
   return d;
