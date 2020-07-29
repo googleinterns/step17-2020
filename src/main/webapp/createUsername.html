@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Create Username</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  <body onload="determineLogin();" id= "background">
+
+    <nav id="navbar">
+        <a href="index.html" class="button">Home</a>
+        <a href="user.html" id="active" class="button">Profile</a>
+        <a href="store.html" class="button">Explore</a>
+        <a href="search.html" class="button">Search for a drink!</a> 
+    </nav>
+    <nav id="loginbar">
+        <div id="form"></div>
+        <div id="login-container"></div>
+        <div id="username-container"></div>
+    </nav>
+
+<form>
+            <div id="email"></div>
+        <textarea name="username" id="username"></textarea>
+        <input type="submit" value="Submit" onclick= "requestUsername();">
+        <div> This user functionality is still in progress, coming soon! </div>
+</form>
+
+
+
+  </body>
+</html>

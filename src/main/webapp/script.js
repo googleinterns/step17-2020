@@ -22,8 +22,8 @@ function determineLogin() {
 
 function displayEmail() {
   fetch('/get-email').then(response => response.json()).then((email) => {
-    document.getElementById('login-container').innerText = email;
-    loadComments(email);
+    document.getElementById('email').innerText = email;
+   loadComments(email);
   }).catch(error => {
     console.error('There has been a problem with your operation:', error);
   });
@@ -35,7 +35,6 @@ function loadComments(email) {
   url.search = new URLSearchParams(params).toString();
   fetch(url).then(response => response.json()).then((drinks) => {
     const ratingListElement = document.getElementById('list');
-    ratingListElement.innerHTML = "";
 
     drinks.forEach((drink) => 
     {
@@ -51,8 +50,27 @@ function createListElement(drink) {
   ratingElement.className = 'drink';
 
   const drinkElement = document.createElement('span');
-  drinkElement.innerText = drink.drink + ", " + drink.rating + "/5, " + drink.content;
+  drinkElement.innerText = drink.email +", "+drink.drink + ", " + drink.rating + "/5, " + drink.content;
 
   ratingElement.appendChild(drinkElement);
   return ratingElement;
+}
+//todo: createlistelement for profile (instead of email has store)
+
+//the functions below fconwill be used for username feature
+function requestUsername() {//todo: check to see if this email associated with the user already has a username first
+  var email = document.getElementById("userEmail").value;
+  var username = document.getElementById("username").value;
+  var params = new URLSearchParams();
+  params.append('username', username);
+  params.append('email', email);
+  fetch('/create-username', {method: 'POST', body: params}).catch(e => {console.log(e)});
+
+}
+function displayUsername() {
+  fetch('/get-username').then(response => response.json()).then((username) => {
+    document.getElementById('username-container').innerText = username;
+  }).catch(error => {
+    console.error('There has been a problem with your operation:', error);
+  });
 }

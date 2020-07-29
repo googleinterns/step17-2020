@@ -81,7 +81,7 @@ function createListElement(drink) {
   ratingElement.className = 'drink';
 
   const drinkElement = document.createElement('span');
-  drinkElement.innerText = drink.drink + ", " + drink.rating + "/5, " + drink.content;
+  drinkElement.innerText = drink.email+ ", " +drink.drink + ", " + drink.rating + "/5, " + drink.content;
 
   ratingElement.appendChild(drinkElement);
   return ratingElement;
@@ -116,6 +116,8 @@ function storeComment(email) {
   params.append('rating', rating.options[rating.selectedIndex].value)
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
+  console.log(store);
+  console.log("store hit");
   params.append('email', email);
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)
