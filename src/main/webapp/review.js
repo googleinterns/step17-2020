@@ -14,82 +14,37 @@
 
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
+var ratingMap = new Map();
 
-// Creates a chart and adds it to the page
+/** Creates a chart and adds it to the page */
 function drawChart() {
-    fetch('/store-rating').then(response => response.json())
-  .then((votes) => {
-    const data = new google.visualization.DataTable();
-    data.addColumn('string', 'Rating');
-    data.addColumn('number', 'Votes');
-    Object.keys(votes).forEach((rating) => {
-      data.addRow([rating, votes[rating]]);
-    });
- 
-    const options = {
-      'title': 'Store Ratings',
-      'width':600,
-      'height':500
-    };
- 
-    const chart = new google.visualization.BarChart(
-        document.getElementById('chart-container'));
-    chart.draw(data, options);
-    });
+  const data = new google.visualization.DataTable();
+  data.addColumn('string', 'Rating');
+  data.addColumn('number', 'Votes');
+
+  for(let i = 1; i < 6; i++) {
+    data.addRow([i.toString(), ratingMap[i]]);
+  }
+
+  const options = {
+    'title': 'Store Ratings',
+    'width':600,
+    'height':500
+  };
+
+  const chart = new google.visualization.BarChart(
+    document.getElementById('chart-container'));
+  chart.draw(data, options);
 }
 
 
-// Adds comments to the page
-function loadStoreInfo() 
-{
+/** Adds store information to the page */
+function loadStoreInfo() {
   document.getElementById('title').innerHTML = localStorage.getItem("shopName");
   document.getElementById('address').innerHTML = localStorage.getItem("address");
-  fetch('/comment').then(response => response.json()).then((tasks) => 
-  {
-    const taskListElement = document.getElementById('task-list');
-
-    tasks.forEach((task) => 
-    {
-      taskListElement.appendChild(createTaskElement(task));
-    })
-    
-  });
+  loadRatings();
 }
 
-/** Creates an element that represents a task, including its delete button. */
-function createTaskElement(task) 
-{
-    const taskElement = document.createElement('li');
-    taskElement.className = 'task';
-
-    const titleElement = document.createElement('span');
-    titleElement.innerText = task.comment;
-
-    const deleteButtonElement = document.createElement('button');
-    deleteButtonElement.innerText = 'Delete';
-    
-    deleteButtonElement.addEventListener('click', () => 
-    {
-        deleteTask(task);
-
-        // Remove the task from the DOM.
-        taskElement.remove();
-    });
-
-    taskElement.appendChild(titleElement);
-    taskElement.appendChild(deleteButtonElement);
-    return taskElement;
-}
-
-
-/** Tells the server to delete the task. */
-function deleteTask(task) {
-  const params = new URLSearchParams();
-  params.append('id', task.id);
-  fetch('/delete-task', {method: 'POST', body: params});
-}
-
-/** Get comments and ratings from the database */
 function loadRatings() {
   var url = new URL('/comment', "https://" + window.location.hostname);
   var params = {store: localStorage.getItem("store")};
@@ -97,35 +52,51 @@ function loadRatings() {
   fetch(url).then(response => response.json()).then((drinks) => {
     const ratingListElement = document.getElementById('comment-list');
     ratingListElement.innerHTML = "";
+    initializeChart();
 
     drinks.forEach((drink) => {
       ratingListElement.appendChild(createListElement(drink));
+      addDrinkToChart(drink);
     })
 
+    drawChart();
   });
+}
+
+/** Initialize all rows on the chart to 0 */
+function initializeChart() {
+  for(let i = 1; i < 6; i++) {
+    ratingMap[i] = 0;
+  }
+}
+
+/** Add to the appropriate row on the chart with given dirnk*/
+function addDrinkToChart(drink) {
+  ratingMap[drink.rating]++;
 }
 
 /** Creates an <li> element containing text. */
 function createListElement(drink) {
-  console.log(drink);
   const ratingElement = document.createElement('li');
   ratingElement.className = 'drink';
 
   const drinkElement = document.createElement('span');
-  drinkElement.innerText = drink.drink + ", " + drink.rating + "/5, " + drink.content;
+  drinkElement.innerText = drink.email+ ", " +drink.drink + ", " + drink.rating + "/5, " + drink.content;
 
   ratingElement.appendChild(drinkElement);
   return ratingElement;
 }
 
-function storeComment() {
+function processComment() {
   fetch('/get-login-info').then(response => response.json()).then((isLoggedIn) => {
     if (!isLoggedIn) {
       window.alert("You're not logged in. Please log in to leave comment.");
       return;
     } else {
       fetch('/get-email').then(response => response.json()).then((email) => {
-        processComment(email);
+        storeComment(email);
+        updateChart();
+        drawChart();
       }).catch(error => {
         console.error('There has been a problem with get-email:', error);
       });
@@ -135,7 +106,8 @@ function storeComment() {
   });
 }
 
-function processComment(email) {
+/** Send new comment to backend to store in database. */
+function storeComment(email) {
   var drink = document.getElementById("drink").value;
   var content = document.getElementById("content").value;
   var params = new URLSearchParams();
@@ -144,6 +116,30 @@ function processComment(email) {
   params.append('rating', rating.options[rating.selectedIndex].value)
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
+  console.log(store);
+  console.log("store hit");
   params.append('email', email);
-  fetch('/comment', {method: 'POST', body: params}).catch(e => {console.log(e)});
+  fetch('/comment', {method: 'POST', body: params}).catch(e => {
+    console.log(e)
+  });
+  // Make new comment into a drink object and display on the page
+  const drinkObj = new Object();
+  drinkObj.drink = drink.toLowerCase();
+  drinkObj.rating = rating.options[rating.selectedIndex].value;
+  drinkObj.content = content;
+  const ratingListElement = document.getElementById('comment-list');
+  ratingListElement.appendChild(createListElement(drinkObj));
+  clearInput();
+}
+
+/** Add to the appropriate row on the chart when a new comment is received */
+function updateChart() {
+  var rating = document.getElementById("rating");
+  ratingMap[rating.options[rating.selectedIndex].value]++;
+}
+
+/** Clears the input box in coffeeshop.html page. */
+function clearInput() {
+  document.getElementById("drink").value = "";
+  document.getElementById("content").value = "";
 }
