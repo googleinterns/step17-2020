@@ -90,10 +90,12 @@ function codeAddress() {
   
  function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
+    // Display markers for Explore tab
     if (document.URL.includes("store.html")) {
       for (var i = 0; i < results.length; i++) {
         createMarker(results[i]);
       }
+    // Calculate distance for Search for a drink tab
     } else {
       coffeeShopInfo = [];
       for (var i = 0; i < results.length; i++) {
@@ -155,11 +157,11 @@ function clearMarkers() {
 /* Calculates the straight line distance between two sets of latitute and longitude */
 function haversine_distance(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
+  var dLat = degToRad(lat2-lat1);
+  var dLon = degToRad(lon2-lon1); 
   var a = 
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) * 
     Math.sin(dLon/2) * Math.sin(dLon/2)
     ; 
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
@@ -167,7 +169,7 @@ function haversine_distance(lat1,lon1,lat2,lon2) {
   return d;
 }
 
-function deg2rad(deg) {
+function degToRad(deg) {
   return deg * (Math.PI/180)
 }
 
