@@ -106,7 +106,6 @@ function codeAddress() {
         coffeeShop.push(results[i].formatted_address);
         coffeeShop.push(distance);
         coffeeShopInfo.push(coffeeShop);
-        createMarker(results[i]);
         coffeeShopInfo.sort( function(a, b) {
           return (a[2] - b[2]);
         });
