@@ -16,8 +16,8 @@
 
 #chart-container{
     border: thin solid black;
-    height:100px;
-    width:100px;
+    height:500px;
+    width:600px;
     margin-left: 38%;
     margin-right: -38%;
     text-align: center;
