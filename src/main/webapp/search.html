@@ -5,28 +5,30 @@
     <title>TYD Search</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <script src="map.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj0YQe0JSmIy5VlZeR-Mcknz3w49g80Q4&libraries=places"async defer></script>
   </head>
-  <body onload="determineLogin()" id= "background">
+  <body onload="getUserLocation(); determineLogin()" id= "background">
 
 <nav id="navbar">
-   <a href="index.html" class="button">Home</a>
-   <a href="user.html" class="button">Profile</a>
-   <a href="store.html" class="button">Explore</a> 
-   <a href="search.html" id="active" class="button">Search for a drink!</a> 
+  <a href="index.html" class="button">Home</a>
+  <a href="user.html" class="button">Profile</a>
+  <a href="store.html" class="button">Explore</a> 
+  <a href="search.html" id="active" class="button">Search for a drink!</a> 
 </nav>
 <nav id="loginbar">
-      <div id="form"></div>
-      <div id="login-container"></div>
-      <div id="email"></div>
+  <div id="form"></div>
+  <div id="login-container"></div>
+  <div id="email"></div>
 </nav>
     
-     <h1> Please enter your drink </h1>
+<h1> Please enter your drink </h1>
 
-     <br><br>
+<br><br>
      
 <form id="search-container">
     <input type="text" placeholder="Place Enter A Zip Code Here.." id="zipcode">
-    <input type="button" onclick="codeAddress();"/>
+    <input type="button" value="Enter" onclick="codeAddress();"/>
 </form>
 <form>
   <label for="beverage">Beverage: </label><br>
@@ -36,7 +38,7 @@
     <option value="By Rating">
     <option value="By closest location">
   </datalist>
-    <input type="submit" value="Submit">
+    <input type="button" value="Submit" onclick="searchForDrink();">
 </form>
 
    

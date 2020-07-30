@@ -116,8 +116,6 @@ function storeComment(email) {
   params.append('rating', rating.options[rating.selectedIndex].value)
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
-  console.log(store);
-  console.log("store hit");
   params.append('email', email);
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)

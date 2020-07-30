@@ -14,6 +14,8 @@
 
 package com.google.sps.servlets;
 
+import com.google.gson.Gson;
+import com.google.sps.data.Drink;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
@@ -23,33 +25,30 @@ import javax.servlet.http.HttpServletResponse;
 
 // import org.json.simple.JSONArray;
 
-// Servlet that handles comments
-@WebServlet("/sort")
-public class SortServlet extends HttpServlet {
+// Servlet that handles search for drinks
+@WebServlet("/search")
+public class SearchServlet extends HttpServlet {
 
   /** This method takes input from the comment box and stores it with the rest of the comments */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Set<Drink> drinksSet = Drink.searchForDrink();
-    // List<List<String>> coffeeShops = new ArrayList<>();
-    // JSONArray array2D = (JSONArray) request.getParameter("coffeeshop");
-    // if (Array2D != null) {
-    //   int len = Array2D.length();
-    //   for (int i = 0; i < len; i++) {
-    //     JSONArray array1D = array2D.get(i);
-    //     List<String> coffeeShop = new ArrayList<>();
-    //     for (int j = 0; j < array1D.length(); j++) {
-    //       coffeeShop.add(array1D.get(i).toString());
-    //     }
-    //   }
-    //   coffeeShops.add(coffeeShop);
-    // }
-    // if (request.getParameter("byDistance").isEmpty()) {
-    // } else {
-    // }
+    String drink = request.getParameter("drink");
+    Gson gson = new Gson();
+    List<HashMap<String, String>> coffeeShops =
+        gson.fromJson(request.getParameter("coffeeshop"), ArrayList.class);
 
-    // Gson gson = new Gson();
+    if (request.getParameter("filter") == "By closest location") {
+      Set<Drink> drinksSet = Drink.searchForDrink(drink);
+      System.out.println(drink);
+      System.out.println("PRINTING THE LIST RETURNED BY DRINKDAO");
+      System.out.println(drinksSet);
+    } else {
+      List<Drink> drinks = Drink.searchForDrinkByRating(drink);
+      System.out.println(drink);
+      System.out.println("PRINTING THE LIST RETURNED BY DRINKDAO");
+      System.out.println(drinks);
+    }
 
-    // response.setContentType("application/json;");
-    // response.getWriter().println(gson.toJson(coffeeShops));
+    response.setContentType("application/json;");
+    // response.getWriter().println(gson.toJson(drinks));
   }
 }
