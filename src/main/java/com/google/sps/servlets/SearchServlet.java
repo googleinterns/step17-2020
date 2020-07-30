@@ -38,17 +38,25 @@ public class SearchServlet extends HttpServlet {
 
     if (request.getParameter("filter") == "By closest location") {
       Set<Drink> drinksSet = Drink.searchForDrink(drink);
+      Set<String> stores =
+          drinksSet.stream().map(Drink::getStore).collect(Collectors.toCollection(HashSet::new));
       System.out.println(drink);
       System.out.println("PRINTING THE LIST RETURNED BY DRINKDAO");
       System.out.println(drinksSet);
+      ListIterator<HashMap<String, String>> itr = coffeeShops.iterator();
+      for (ListIterator<HashMap<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
+        HashMap<String, String> coffeeShop = coffeeShops.next();
+        if (!stores.contains(coffeeShop.get("store"))) {
+          itr.remove();
+        }
+      }
+      response.setContentType("application/json;");
+      response.getWriter().println(gson.toJson(coffeeShops));
     } else {
       List<Drink> drinks = Drink.searchForDrinkByRating(drink);
       System.out.println(drink);
       System.out.println("PRINTING THE LIST RETURNED BY DRINKDAO");
       System.out.println(drinks);
     }
-
-    response.setContentType("application/json;");
-    // response.getWriter().println(gson.toJson(drinks));
   }
 }
