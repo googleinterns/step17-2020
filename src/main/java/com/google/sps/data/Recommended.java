@@ -7,7 +7,7 @@ public class Recommended {
   public static Drink getDrink(String storeid, String drinkName) {
     List<Drink> drinklist = DrinkDAO.getDrinksByStore(storeid);
     for (Drink d : drinklist) {
-      if (d.getName.equals(drinkName)) {
+      if (d.getName().equals(drinkName)) {
         return d;
       }
     }
@@ -44,11 +44,11 @@ public class Recommended {
     return (commentScore + ratingScore + distanceScore);
   }
   // this function returns the highest rated store from a list of stores
-  public static String getBestShop(List<String> listStoreIds) {
+  public static String getBestShop(List<String> listStoreIds, String inputBeverage) {
     double max = 0.0;
-    String highest;
+    String highest = "";
     for (String storeid : listStoreIds) {
-      Drink d = (getDrink(storeid));
+      Drink d = getDrink(storeid, inputBeverage);
       if (d != null) {
         double currentShopScore = getScore(d);
         if (currentShopScore > max) {
@@ -57,7 +57,8 @@ public class Recommended {
         }
       }
     }
-    return highest;
+    if (!highest.equals("")) return highest;
+    return "No Results";
   }
 
   public static int getDistanceMins() { // todo: get distance of store in mins
