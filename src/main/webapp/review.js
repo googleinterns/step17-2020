@@ -28,7 +28,7 @@ function drawChart() {
 
   const options = {
     'title': 'Store Ratings',
-    'width':600,
+    'width':500,
     'height':500
   };
 
@@ -116,9 +116,8 @@ function storeComment(email) {
   params.append('rating', rating.options[rating.selectedIndex].value)
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
-  console.log(store);
-  console.log("store hit");
   params.append('email', email);
+  window.location.reload();
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)
   });
