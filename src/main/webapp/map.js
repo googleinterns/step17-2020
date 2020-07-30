@@ -4,6 +4,7 @@ var shopInfo;
 var userPos;
 var geocoder;
 var markers = [];
+var coffeeShopInfo = [];
 
 /** Creates a map that shows all coffee shops around the user. */
 function createMap() {
@@ -39,8 +40,10 @@ function createMap() {
   }
 }
 
-// Request nearby coffee shop info
-// Unit of radius: metres. Maximum allowed is 50000 metres
+/**
+/* Request nearby coffee shop info
+/* Unit of radius: Metres. Maximum allowed is 50000 metres
+ */
 function coffeeShopRequest(userPos) {
 	var request = {
     location: userPos,
@@ -61,7 +64,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, userPos) {
   infoWindow.open(map);
 }
 
-// Call this wherever needed to actually handle the display
+/* Call this wherever needed to actually handle the display */
 function codeAddress() {
 	// Clear markers from previous search results
 	clearMarkers();
@@ -74,7 +77,7 @@ function codeAddress() {
       }
     }, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        //Got result, center the map and put it out there
+        // Got result, center the map and put it out there
         map.setCenter(results[0].geometry.location);
         userPos = {
           lat: results[0].geometry.location.lat(),
@@ -89,8 +92,29 @@ function codeAddress() {
   
  function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
-    for (var i = 0; i < results.length; i++) {
+    // Display markers for Explore tab
+    if (document.URL.includes("store.html")) {
+      for (var i = 0; i < results.length; i++) {
         createMarker(results[i]);
+      }
+    // Calculate distance for Search for a drink tab
+    } else {
+      coffeeShopInfo = [];
+      for (var i = 0; i < results.length; i++) {
+        var distance = haversine_distance(results[i].geometry.location.lat(),
+          results[i].geometry.location.lng(), userPos.lat, userPos.lng);
+        // Create coffeeshop array that contains the name, address
+        // and distance from user
+        var coffeeShop = [];
+        coffeeShop.push(results[i].name);
+        coffeeShop.push(results[i].formatted_address);
+        coffeeShop.push(distance);
+        coffeeShopInfo.push(coffeeShop);
+        createMarker(results[i]);
+        coffeeShopInfo.sort( function(a, b) {
+          return (a[2] - b[2]);
+        });
+      }
     }
     displayMarkers();
   }
@@ -120,14 +144,54 @@ function createMarker(place) {
 }
 
 function displayMarkers() {
-  for (var i = 0; i < markers.length; i++ ) {
-    markers[i].setMap(map);
-  }
+  markers.forEach(marker => marker.setMap(map));
 }
 
 function clearMarkers() {
-  for (var i = 0; i < markers.length; i++ ) {
-    markers[i].setMap(null);
-  }
+  markers.forEach(marker => marker.setMap(null));
   markers = [];
+}
+
+/**
+/* Calculates the straight line distance between two
+/* sets of latitutes and longitutes
+/* A breakdown of the haversine formula can be found at
+/* http://www.movable-type.co.uk/scripts/latlong.html
+ */
+function haversine_distance(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = degToRad(lat2-lat1);
+  var dLon = degToRad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function degToRad(deg) {
+  return deg * (Math.PI/180)
+}
+
+/**
+/* Gets the location and name of the place
+/* and displays the walking route on Google Map
+ */
+function displayRoute(userPos, coffeeShop) {
+  var directionsDisplay = new google.maps.DirectionsRenderer();
+  directionsDisplay.setMap(map);
+
+  var request = {
+    origin : userPos,
+    destination : coffeeShop,
+    travelMode : google.maps.TravelMode.WALKING
+  };
+  var directionsService = new google.maps.DirectionsService(); 
+  directionsService.route(request, function(response, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      directionsDisplay.setDirections(response);
+    }
+  });
 }
