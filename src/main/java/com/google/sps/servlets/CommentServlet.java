@@ -34,7 +34,7 @@ public class CommentServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     List<Comment> comments;
-    if (request.getParameter("store").isEmpty()) {
+    if (request.getParameter("store") == null) {
       comments = CommentDAO.getCommentByEmail(request.getParameter("email"));
     } else {
       comments = CommentDAO.getCommentByStore(request.getParameter("store"));
