@@ -215,12 +215,35 @@ function searchForDrink() {
     alert("Please enter a zip code before searching for a drink.")
   }
   var drink = document.getElementById("beverage").value;
-  var filter = document.getElementById("filters").value;
+  var filtersElement = document.getElementById("filters");
+  var filter = filtersElement.options[filtersElement.selectedIndex].value;
   var params = new URLSearchParams();
   params.append('drink', drink);
   params.append('filter', filter)
   params.append('coffeeshop', JSON.stringify(coffeeShopInfo));
-  fetch('/search', {method: 'POST', body: params}).catch(e => {
+  document.getElementById("store-list").innerHTML = "";
+  fetch('/search', {method: 'POST', body: params}).then(function(stores) {
+    return stores.json();
+  }).then(function(data) {
+    console.log(data);
+    const ratingListElement = document.getElementById('store-list');
+    data.forEach((store) => {
+      console.log(store);
+      ratingListElement.appendChild(createListElement(store));
+    })
+  }).catch(e => {
     console.log(e)
   });
+}
+
+function createListElement(store) {
+  const listElement = document.createElement('li');
+  listElement.className = 'store';
+
+  const storeElement = document.createElement('span');
+  console.log(store.name);
+  storeElement.innerText = store.name + " at " + store.address + ", " + store.distance + " km away.";
+
+  listElement.appendChild(storeElement);
+  return listElement;
 }

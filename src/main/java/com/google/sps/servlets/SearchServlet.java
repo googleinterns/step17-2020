@@ -18,45 +18,56 @@ import com.google.gson.Gson;
 import com.google.sps.data.Drink;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// import org.json.simple.JSONArray;
-
 // Servlet that handles search for drinks
 @WebServlet("/search")
 public class SearchServlet extends HttpServlet {
 
-  /** This method takes input from the comment box and stores it with the rest of the comments */
+  /** This method takes input from the search bar and returns relevant stores' information */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String drink = request.getParameter("drink");
+    // Get drink name entered in the search bar
+    String name = request.getParameter("drink");
     Gson gson = new Gson();
-    List<HashMap<String, String>> coffeeShops =
+    // Convert Json stringified JavaScript array into an ArrayList of nearby coffee shops
+    List<Map<String, String>> coffeeShops =
         gson.fromJson(request.getParameter("coffeeshop"), ArrayList.class);
 
-    if (request.getParameter("filter") == "By closest location") {
-      Set<Drink> drinksSet = Drink.searchForDrink(drink);
+    if (request.getParameter("filter").equals("By Distance")) {
+      Set<Drink> drinksSet = Drink.searchForDrink(name);
+      // A set of store IDs that contains the drink
       Set<String> stores =
           drinksSet.stream().map(Drink::getStore).collect(Collectors.toCollection(HashSet::new));
-      System.out.println(drink);
-      System.out.println("PRINTING THE LIST RETURNED BY DRINKDAO");
-      System.out.println(drinksSet);
-      ListIterator<HashMap<String, String>> itr = coffeeShops.iterator();
-      for (ListIterator<HashMap<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
-        HashMap<String, String> coffeeShop = coffeeShops.next();
+      for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
+        Map<String, String> coffeeShop = itr.next();
+        // Check if the nearby coffee shop is in drinksSet (returned by searchForDrink)
         if (!stores.contains(coffeeShop.get("store"))) {
           itr.remove();
         }
       }
       response.setContentType("application/json;");
       response.getWriter().println(gson.toJson(coffeeShops));
+
     } else {
-      List<Drink> drinks = Drink.searchForDrinkByRating(drink);
-      System.out.println(drink);
-      System.out.println("PRINTING THE LIST RETURNED BY DRINKDAO");
-      System.out.println(drinks);
+      List<Map<String, String>> intersection = new ArrayList<>();
+      List<Drink> drinks = Drink.searchForDrinkByRating(name);
+      for (Iterator<Drink> drinkItr = drinks.iterator(); drinkItr.hasNext(); ) {
+        Drink drink = drinkItr.next();
+        // Check if the nearby coffee shop is in drinks (returned by searchForDrinkByRating)
+        for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
+          Map<String, String> coffeeShop = itr.next();
+          if (coffeeShop.get("store").equals(drink.getStore())) {
+            intersection.add(coffeeShop);
+            break;
+          }
+        }
+      }
+      response.setContentType("application/json;");
+      response.getWriter().println(gson.toJson(intersection));
     }
   }
 }

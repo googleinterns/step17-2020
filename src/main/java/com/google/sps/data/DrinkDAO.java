@@ -43,17 +43,33 @@ public class DrinkDAO {
     return drinks;
   }
 
-  public static Drink saveDrink(String name, double avgRating, double numRatings, String storeID) {
-    Entity drinkEntity = new Entity("Drink");
+  public static Drink saveDrink(String name, double newRating, String storeID) {
+    Query query =
+        new Query("Drink")
+            .addFilter("store", Query.FilterOperator.EQUAL, storeID)
+            .addFilter("name", Query.FilterOperator.EQUAL, name);
+    List<Drink> drinks = getDrinks(query);
+    // Check if the drink in that store is already in saved in datastore
+    // If not, add a new entity
+    if (drinks.isEmpty()) {
+      Entity drinkEntity = new Entity("Drink");
 
-    drinkEntity.setProperty("name", name);
-    drinkEntity.setProperty("rating", avgRating);
-    drinkEntity.setProperty("numRatings", numRatings);
-    drinkEntity.setProperty("store", storeID);
+      drinkEntity.setProperty("name", name);
+      drinkEntity.setProperty("rating", newRating);
+      drinkEntity.setProperty("numRatings", 1.0);
+      drinkEntity.setProperty("store", storeID);
 
-    drinkDataStore.put(drinkEntity);
-
-    return new Drink(name, storeID, avgRating, numRatings, drinkEntity);
+      drinkDataStore.put(drinkEntity);
+      return new Drink(name, storeID, newRating, 1.0, drinkEntity);
+      // If yes, update the average rating of the drink
+    } else if (drinks.size() == 1) {
+      Drink drink = drinks.get(0);
+      drinkDataStore.put(drink.updateAverageRating(newRating));
+      return drink;
+      // There should only be one drink eneity of that specific drink in that specific store
+    } else {
+      throw new RuntimeException("Should not have multiple drink entities 1 drink in 1 store");
+    }
   }
 
   public static List<Drink> getDrinksByStore(String storeID) {
@@ -66,10 +82,5 @@ public class DrinkDAO {
     Query query = new Query("Drink").addFilter("name", Query.FilterOperator.EQUAL, name);
     List<Drink> drinkByName = getDrinks(query);
     return drinkByName;
-  }
-
-  public static void updateEntity(Entity drinkEntity, double numRatings, double rating) {
-    drinkEntity.setProperty("rating", rating);
-    drinkEntity.setProperty("numRatings", numRatings);
   }
 }

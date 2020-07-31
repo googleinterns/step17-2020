@@ -9,38 +9,35 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj0YQe0JSmIy5VlZeR-Mcknz3w49g80Q4&libraries=places"async defer></script>
   </head>
   <body onload="getUserLocation(); determineLogin()" id= "background">
+    <nav id="navbar">
+    <a href="index.html" class="button">Home</a>
+    <a href="user.html" class="button">Profile</a>
+    <a href="store.html" class="button">Explore</a> 
+    <a href="search.html" id="active" class="button">Search for a drink!</a> 
+    </nav>
+    <nav id="loginbar">
+    <div id="form"></div>
+    <div id="login-container"></div>
+    <div id="email"></div>
+    </nav>
+        
+    <h1> Please enter your drink </h1>
 
-<nav id="navbar">
-  <a href="index.html" class="button">Home</a>
-  <a href="user.html" class="button">Profile</a>
-  <a href="store.html" class="button">Explore</a> 
-  <a href="search.html" id="active" class="button">Search for a drink!</a> 
-</nav>
-<nav id="loginbar">
-  <div id="form"></div>
-  <div id="login-container"></div>
-  <div id="email"></div>
-</nav>
-    
-<h1> Please enter your drink </h1>
-
-<br><br>
-     
-<form id="search-container">
-    <input type="text" placeholder="Place Enter A Zip Code Here.." id="zipcode">
-    <input type="button" value="Enter" onclick="codeAddress();"/>
-</form>
-<form>
-  <label for="beverage">Beverage: </label><br>
-  <input type="text" id="beverage" name="beverage"><br>
-    <input list="filters" name="filter">
-  <datalist id="filters">
-    <option value="By Rating">
-    <option value="By closest location">
-  </datalist>
-    <input type="button" value="Submit" onclick="searchForDrink();">
-</form>
-
-   
+    <br><br>
+        
+    <form id="search-container">
+        <input type="text" placeholder="Place Enter A Zip Code Here.." id="zipcode">
+        <input type="button" value="Enter" onclick="codeAddress();"/>
+    </form>
+    <form>
+      <label for="beverage">Beverage: </label><br>
+      <input type="text" id="beverage" name="beverage"><br>
+      <select id="filters">
+        <option value="By Rating">By Rating</option>
+        <option value="By Distance">By Distance</option>
+      </select>
+      <input type="button" value="Submit" onclick="searchForDrink();">
+    </form>
+    <ul id="store-list"></ul>
   </body>
 </html>
