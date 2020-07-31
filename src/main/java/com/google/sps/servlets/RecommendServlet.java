@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// Servlet that handles comments
+// Servlet that handles recommendations
 @WebServlet("/recommend")
 public class RecommendServlet extends HttpServlet {
 
