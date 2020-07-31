@@ -225,10 +225,8 @@ function searchForDrink() {
   fetch('/search', {method: 'POST', body: params}).then(function(stores) {
     return stores.json();
   }).then(function(data) {
-    console.log(data);
     const ratingListElement = document.getElementById('store-list');
     data.forEach((store) => {
-      console.log(store);
       ratingListElement.appendChild(createListElement(store));
     })
   }).catch(e => {
@@ -241,9 +239,11 @@ function createListElement(store) {
   listElement.className = 'store';
 
   const storeElement = document.createElement('span');
-  console.log(store.name);
-  storeElement.innerText = store.name + " at " + store.address + ", " + store.distance + " km away.";
-
+  if (store.rating !== undefined) {
+    storeElement.innerText = store.name + " at " + store.address + ", with a rating of " + store.rating;
+  } else {
+    storeElement.innerText = store.name + " at " + store.address + ", " + store.distance + " km away.";
+  }
   listElement.appendChild(storeElement);
   return listElement;
 }

@@ -61,6 +61,7 @@ public class SearchServlet extends HttpServlet {
         for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
           Map<String, String> coffeeShop = itr.next();
           if (coffeeShop.get("store").equals(drink.getStore())) {
+            coffeeShop.put("rating", Double.toString(drink.getRating()));
             intersection.add(coffeeShop);
             break;
           }
