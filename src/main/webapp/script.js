@@ -74,3 +74,12 @@ function displayUsername() {
     console.error('There has been a problem with your operation:', error);
   });
 }
+
+function getBeverage() {
+    var beverage = document.getElementById("beverageRequested").value;
+    console.log(beverage);
+    var params = new URLSearchParams();
+    params.append('beverageRequested', beverage);
+    fetch('/recommend', {method: 'POST', body: params}).catch(e => {console.log(e)});
+
+}
