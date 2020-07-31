@@ -117,7 +117,6 @@ function storeComment(email) {
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
   params.append('email', email);
-  window.location.reload();
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)
   });
@@ -129,6 +128,7 @@ function storeComment(email) {
   const ratingListElement = document.getElementById('comment-list');
   ratingListElement.appendChild(createListElement(drinkObj));
   clearInput();
+  window.location.reload();//this will reload the page so the review section is shown as updated
 }
 
 /** Add to the appropriate row on the chart when a new comment is received */
