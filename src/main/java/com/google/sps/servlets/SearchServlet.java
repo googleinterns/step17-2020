@@ -42,9 +42,11 @@ public class SearchServlet extends HttpServlet {
       // A set of store IDs that contains the drink
       Set<String> stores =
           drinksSet.stream().map(Drink::getStore).collect(Collectors.toCollection(HashSet::new));
+
       for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
         Map<String, String> coffeeShop = itr.next();
-        // Check if the nearby coffee shop is in drinksSet (returned by searchForDrink)
+
+        // Check if the nearby coffee shop is in the set of stores returned by searchForDrink
         if (!stores.contains(coffeeShop.get("store"))) {
           itr.remove();
         }
@@ -53,13 +55,18 @@ public class SearchServlet extends HttpServlet {
       response.getWriter().println(gson.toJson(coffeeShops));
 
     } else {
+      // Create a intersection between search results and nearby coffee shops
       List<Map<String, String>> intersection = new ArrayList<>();
       List<Drink> drinks = Drink.searchForDrinkByRating(name);
+
+      // Iterate through the search results to see if each store is in the list of nearby coffee
+      // shops
       for (Iterator<Drink> drinkItr = drinks.iterator(); drinkItr.hasNext(); ) {
         Drink drink = drinkItr.next();
-        // Check if the nearby coffee shop is in drinks (returned by searchForDrinkByRating)
+
         for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
           Map<String, String> coffeeShop = itr.next();
+
           if (coffeeShop.get("store").equals(drink.getStore())) {
             coffeeShop.put("rating", Double.toString(drink.getRating()));
             intersection.add(coffeeShop);

@@ -211,6 +211,7 @@ function displayRoute(userPos, coffeeShop) {
 }
 
 function searchForDrink() {
+  // Prompt user to enter a location
   if (typeof userPos === "undefined") {
     alert("Please enter a zip code before searching for a drink.")
   }
@@ -222,11 +223,13 @@ function searchForDrink() {
   params.append('filter', filter)
   params.append('coffeeshop', JSON.stringify(coffeeShopInfo));
   document.getElementById("store-list").innerHTML = "";
+
+  // Get results from search servlet
   fetch('/search', {method: 'POST', body: params}).then(function(stores) {
     return stores.json();
-  }).then(function(data) {
+  }).then(function(stores) {
     const ratingListElement = document.getElementById('store-list');
-    data.forEach((store) => {
+    stores.forEach((store) => {
       ratingListElement.appendChild(createListElement(store));
     })
   }).catch(e => {
@@ -237,10 +240,12 @@ function searchForDrink() {
 function createListElement(store) {
   const listElement = document.createElement('li');
   listElement.className = 'store';
-
   const storeElement = document.createElement('span');
+  
+  // Display search by rating
   if (store.rating !== undefined) {
     storeElement.innerText = store.name + " at " + store.address + ", with a rating of " + store.rating;
+  // Display search by distance
   } else {
     storeElement.innerText = store.name + " at " + store.address + ", " + store.distance + " km away.";
   }
