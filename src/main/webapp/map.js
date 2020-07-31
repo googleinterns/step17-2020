@@ -1,5 +1,4 @@
 var map;
-// var infoWindow;
 var shopInfo;
 var userPos;
 var geocoder;
@@ -14,8 +13,6 @@ function createMap() {
     document.getElementById('map'),
     {center: newyork, zoom: 13});
   
-  // Infowindow for to handle error in get user location
-  // infoWindow = new google.maps.InfoWindow();
   // Global infowindow for coffee shop
   shopInfo = new google.maps.InfoWindow();
 
@@ -46,7 +43,7 @@ function getUserLocation() {
 
 /**
 /* Request nearby coffee shop info
-/* Unit of radius: Metres. Maximum allowed is 50000 metres
+/* Unit of radius: Metres. Maximum allowed in Places API is 50000 metres
  */
 function coffeeShopRequest(userPos) {
 	var request = {
@@ -122,9 +119,6 @@ function codeAddress() {
           'lat': results[i].geometry.location.lat(),
           'lng': results[i].geometry.location.lng()
         };
-        // coffeeShop.push(results[i].name);
-        // coffeeShop.push(results[i].formatted_address);
-        // coffeeShop.push(distance);
         coffeeShopInfo.push(coffeeShop);
         coffeeShopInfo.sort( function(a, b) {
           return (a['distance'] - b['distance']);
@@ -147,6 +141,7 @@ function createMarker(place) {
   marker.addListener('click', () => {
     shopInfo.close();
     shopInfo.setContent('<a href=coffeeshop.html>' + place.name + '</a>');
+    
     // Save place name and address in local storage
     // to display in the coffeeshop page
     localStorage.setItem("shopName", place.name);
@@ -241,10 +236,11 @@ function createListElement(store) {
   const listElement = document.createElement('li');
   listElement.className = 'store';
   const storeElement = document.createElement('span');
-  
+
   // Display search by rating
   if (store.rating !== undefined) {
     storeElement.innerText = store.name + " at " + store.address + ", with a rating of " + store.rating;
+  
   // Display search by distance
   } else {
     storeElement.innerText = store.name + " at " + store.address + ", " + store.distance + " km away.";
