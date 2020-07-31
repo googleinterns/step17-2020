@@ -4,9 +4,9 @@ import java.util.*;
 
 public class Recommended {
 
-  public static Drink getDrink(String storeid, String drinkName) {
-    List<Drink> drinklist = DrinkDAO.getDrinksByStore(storeid);
-    for (Drink d : drinklist) {
+  public static Drink getDrink(String storeId, String drinkName) {
+    List<Drink> drinkList = DrinkDAO.getDrinksByStore(storeId);
+    for (Drink d : drinkList) {
       if (d.getName().equals(drinkName)) {
         return d;
       }
@@ -15,45 +15,48 @@ public class Recommended {
   }
   // given a coffeeshop, return its tydrecommended score
   public static double getScore(Drink d) {
-    double comments = d.getNumRatings();
-    // instead of shop rating get drink rating from this store
-    double rating = d.getRating();
+    int numComments = d.getNumRatings();
+    double avgRating = d.getRating();
     double distanceMinutes = getDistanceMins();
     double commentScore, ratingScore, distanceScore;
     //      /30             /35         /35
 
     // get commentScore
-    if (comments >= 100.0) // 100+
-    commentScore = 30;
-    else if (comments >= 75.0) // 75-99
-    commentScore = 25;
-    else if (comments >= 50.0) // 50-74
-    commentScore = 20;
-    else if (comments >= 25.0) // 25-49
-    commentScore = 15;
-    else commentScore = comments * .6;
+    if (numComments >= 100) { // 100+
+      commentScore = 30;
+    } else if (numComments >= 75) { // 75-99
+      commentScore = 25;
+    } else if (numComments >= 50) { // 50-74
+      commentScore = 20;
+    } else if (numComments >= 25) { // 25-49
+      commentScore = 15;
+    } else {
+      commentScore = ((double) numComments * .6);
+    }
 
     // get ratingScore
-    ratingScore = rating * 7;
+    ratingScore = avgRating * 7;
 
     // get distanceScore
-    if (distanceMinutes <= 4.0) // 0-4 mins
-    distanceScore = 35;
-    else distanceScore = 35 - distanceMinutes;
+    if (distanceMinutes <= 4.0) { // 0-4 mins
+      distanceScore = 35;
+    } else {
+      distanceScore = 35 - distanceMinutes;
+    }
 
     return (commentScore + ratingScore + distanceScore);
   }
-  // this function returns the highest rated store from a list of stores
+  // this function returns the highest scored store from a list of stores
   public static String getBestShop(List<String> listStoreIds, String inputBeverage) {
-    double max = 0.0;
-    String highest = "";
-    for (String storeid : listStoreIds) {
-      Drink d = getDrink(storeid, inputBeverage);
+    double bestScore = 0.0;
+    String highestScoredStore = "";
+    for (String storeId : listStoreIds) {
+      Drink d = getDrink(storeId, inputBeverage);
       if (d != null) {
         double currentShopScore = getScore(d);
-        if (currentShopScore > max) {
-          highest = storeid;
-          max = currentShopScore;
+        if (currentShopScore > bestScore) {
+          highestScoredStore = storeId;
+          bestScore = currentShopScore;
         }
       }
     }
