@@ -2,6 +2,9 @@ package com.google.sps.data;
 
 import java.util.*;
 
+/*This class holds the TYDRecommended algorithm which will give the
+    user a recommended store to get their desired beverage from.
+*/
 public class Recommended {
 
   public static Drink getDrink(String storeId, String drinkName) {
