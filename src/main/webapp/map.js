@@ -8,10 +8,10 @@ var coffeeShopInfo = [];
 /** Creates a map that shows all coffee shops around the user. */
 function createMap() {
   // Set default location at new york city
-  var newyork = new google.maps.LatLng(40.7128, -74.0060);
+  var defaultLcation = new google.maps.LatLng(40.7128, -74.0060);
   map = new google.maps.Map(
     document.getElementById('map'),
-    {center: newyork, zoom: 13});
+    {center: defaultLcation, zoom: 13});
   
   // Global infowindow for coffee shop
   shopInfo = new google.maps.InfoWindow();
@@ -67,8 +67,7 @@ function handleLocationError(browserHasGeolocation) {
   }
 }
 
-/* Call this wherever needed to actually handle the display */
-function codeAddress() {
+function getCoffeeShopByZipcode() {
 	// Clear markers from previous search results
 	clearMarkers();
 	geocoder = new google.maps.Geocoder();
@@ -80,7 +79,7 @@ function codeAddress() {
       }
     }, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        // Got result, center the map and put it out there
+        // Centre the map at user location (if there is a Google Map on the page)
         if (typeof map !== "undefined") {
           map.setCenter(results[0].geometry.location);
         }
@@ -169,18 +168,18 @@ function clearMarkers() {
  */
 function haversine_distance(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
-  var dLat = degToRad(lat2-lat1);
-  var dLon = degToRad(lon2-lon1); 
+  var dLat = degreesToRadians(lat2-lat1);
+  var dLon = degreesToRadians(lon2-lon1); 
   var a = 
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) * 
+    Math.cos(degreesToRadians(lat1)) * Math.cos(degreesToRadians(lat2)) * 
     Math.sin(dLon/2) * Math.sin(dLon/2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   var d = R * c; // Distance in km
   return d;
 }
 
-function degToRad(deg) {
+function degreesToRadians(deg) {
   return deg * (Math.PI/180)
 }
 
