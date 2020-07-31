@@ -49,6 +49,7 @@ public class DrinkDAO {
             .addFilter("store", Query.FilterOperator.EQUAL, storeID)
             .addFilter("name", Query.FilterOperator.EQUAL, name);
     List<Drink> drinks = getDrinks(query);
+    
     // Check if the drink in that store is already in saved in datastore
     // If not, add a new entity
     if (drinks.isEmpty()) {
@@ -61,14 +62,15 @@ public class DrinkDAO {
 
       drinkDataStore.put(drinkEntity);
       return new Drink(name, storeID, newRating, 1.0, drinkEntity);
-      // If yes, update the average rating of the drink
+    
+    // If yes, update the average rating of the drink
     } else if (drinks.size() == 1) {
       Drink drink = drinks.get(0);
       drinkDataStore.put(drink.updateAverageRating(newRating));
       return drink;
-      // There should only be one drink eneity of that specific drink in that specific store
+
     } else {
-      throw new RuntimeException("Should not have multiple drink entities 1 drink in 1 store");
+      throw new RuntimeException("Should not have multiple drink entities for 1 drink in 1 store");
     }
   }
 
