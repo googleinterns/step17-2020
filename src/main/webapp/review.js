@@ -28,7 +28,7 @@ function drawChart() {
 
   const options = {
     'title': 'Store Ratings',
-    'width':600,
+    'width':500,
     'height':500
   };
 
@@ -75,17 +75,6 @@ function addDrinkToChart(drink) {
   ratingMap[drink.rating]++;
 }
 
-/** Creates an <li> element containing text. */
-function createListElement(drink) {
-  const ratingElement = document.createElement('li');
-  ratingElement.className = 'drink';
-
-  const drinkElement = document.createElement('span');
-  drinkElement.innerText = drink.email+ ", " +drink.drink + ", " + drink.rating + "/5, " + drink.content;
-
-  ratingElement.appendChild(drinkElement);
-  return ratingElement;
-}
 
 function processComment() {
   fetch('/get-login-info').then(response => response.json()).then((isLoggedIn) => {
@@ -97,6 +86,7 @@ function processComment() {
         storeComment(email);
         updateChart();
         drawChart();
+        location.reload();
       }).catch(error => {
         console.error('There has been a problem with get-email:', error);
       });
@@ -116,8 +106,6 @@ function storeComment(email) {
   params.append('rating', rating.options[rating.selectedIndex].value)
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
-  console.log(store);
-  console.log("store hit");
   params.append('email', email);
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)
