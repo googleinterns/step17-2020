@@ -28,7 +28,7 @@ function drawChart() {
 
   const options = {
     'title': 'Store Ratings',
-    'width':600,
+    'width':500,
     'height':500
   };
 
@@ -116,8 +116,6 @@ function storeComment(email) {
   params.append('rating', rating.options[rating.selectedIndex].value)
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
-  console.log(store);
-  console.log("store hit");
   params.append('email', email);
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)
@@ -130,6 +128,7 @@ function storeComment(email) {
   const ratingListElement = document.getElementById('comment-list');
   ratingListElement.appendChild(createListElement(drinkObj));
   clearInput();
+  window.location.reload();//this will reload the page so the review section is shown as updated
 }
 
 /** Add to the appropriate row on the chart when a new comment is received */
