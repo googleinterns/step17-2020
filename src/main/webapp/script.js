@@ -63,7 +63,7 @@ function createListElementUser(drink) {
 }
 /**This function turns the store id into a readable store */
 function idToStore(storeId){
-    //todo
+    
 }
 
 //end of user's profile functions

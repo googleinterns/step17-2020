@@ -8,22 +8,18 @@ import java.util.*;
 public class Recommended {
 
   public static Drink getDrink(String storeId, String drinkName) {
-    System.out.println(
-        "2"); // ---------------------------------------------------> REMOVE AFTER FINISHING TEST
     List<Drink> drinkList = DrinkDAO.getDrinksByStore(storeId);
-    for (Drink d : drinkList) {
-      if (d.getName().equals(drinkName)) {
-        return d;
+    for (Drink drink : drinkList) {
+      if (drink.getName().equals(drinkName)) {
+        return drink;
       }
     }
     return null;
   }
   // given a coffeeshop, return its tydrecommended score
-  public static double getScore(Drink d) {
-    System.out.println(
-        "3"); // ---------------------------------------------------> REMOVE AFTER FINISHING TEST
-    int numComments = (int) d.getNumRatings();
-    double avgRating = d.getRating();
+  public static double getScore(Drink drink) {
+    int numComments = (int) drink.getNumRatings();
+    double avgRating = drink.getRating();
     double distanceMinutes = getDistanceMins();
     double commentScore, ratingScore, distanceScore;
     //      /30             /35         /35
@@ -55,8 +51,6 @@ public class Recommended {
   }
   // this function returns the highest scored store from a list of stores
   public static String getBestShop(List<String> listStoreIds, String inputBeverage) {
-    System.out.println(
-        "1"); // ---------------------------------------------------> REMOVE AFTER FINISHING TEST
     double bestScore = 0.0;
     String highestScoredStore = "";
     for (String storeId : listStoreIds) {
@@ -69,11 +63,8 @@ public class Recommended {
         }
       }
     }
-    System.out.println(
-        "4"); // ---------------------------------------------------> REMOVE AFTER FINISHING TEST
+
     if (!highestScoredStore.equals("")) {
-      System.out.println(
-          "5"); // ---------------------------------------------------> REMOVE AFTER FINISHING TEST
       return highestScoredStore;
     }
     return "No Results";
