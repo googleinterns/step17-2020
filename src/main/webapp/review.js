@@ -28,7 +28,7 @@ function drawChart() {
 
   const options = {
     'title': 'Store Ratings',
-    'width':600,
+    'width':500,
     'height':500
   };
 
@@ -116,20 +116,11 @@ function storeComment(email) {
   params.append('rating', rating.options[rating.selectedIndex].value)
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
-  console.log(store);
-  console.log("store hit");
   params.append('email', email);
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)
   });
-  // Make new comment into a drink object and display on the page
-  const drinkObj = new Object();
-  drinkObj.drink = drink.toLowerCase();
-  drinkObj.rating = rating.options[rating.selectedIndex].value;
-  drinkObj.content = content;
-  const ratingListElement = document.getElementById('comment-list');
-  ratingListElement.appendChild(createListElement(drinkObj));
-  clearInput();
+  window.location.reload();
 }
 
 /** Add to the appropriate row on the chart when a new comment is received */
@@ -138,8 +129,3 @@ function updateChart() {
   ratingMap[rating.options[rating.selectedIndex].value]++;
 }
 
-/** Clears the input box in coffeeshop.html page. */
-function clearInput() {
-  document.getElementById("drink").value = "";
-  document.getElementById("content").value = "";
-}

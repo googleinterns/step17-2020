@@ -17,6 +17,7 @@ package com.google.sps.servlets;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import com.google.sps.data.CommentDAO;
+import com.google.sps.data.DrinkDAO;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +35,7 @@ public class CommentServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     List<Comment> comments;
-    if (request.getParameter("store").isEmpty()) {
+    if (request.getParameter("store") == null) {
       comments = CommentDAO.getCommentByEmail(request.getParameter("email"));
     } else {
       comments = CommentDAO.getCommentByStore(request.getParameter("store"));
@@ -56,5 +57,6 @@ public class CommentServlet extends HttpServlet {
     String email = request.getParameter("email");
 
     CommentDAO.storeComment(rating, drink, content, store, email);
+    DrinkDAO.saveDrink(drink, (double) rating, store);
   }
 }
