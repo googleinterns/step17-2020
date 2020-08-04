@@ -5,7 +5,7 @@ import java.util.*;
 /*This class holds the TYDRecommended algorithm which will give the
     user a recommended store to get their desired beverage from.
 */
-public class Recommended {
+public class RecommendationEngine {
 
   public static Drink getDrink(String storeId, String drinkName) {
     List<Drink> drinkList = DrinkDAO.getDrinksByStore(storeId);
@@ -20,7 +20,7 @@ public class Recommended {
   public static double getScore(Drink drink) {
     int numComments = (int) drink.getNumRatings();
     double avgRating = drink.getRating();
-    double distanceMinutes = getDistanceMins();
+    double timeMinutes = getWalkingDistanceMins();
     double commentScore, ratingScore, distanceScore;
     //      /30             /35         /35
 
@@ -34,17 +34,17 @@ public class Recommended {
     } else if (numComments >= 25) { // 25-49
       commentScore = 15;
     } else {
-      commentScore = ((double) numComments * .6);
+      commentScore = (numComments * .6);
     }
 
     // get ratingScore
     ratingScore = avgRating * 7;
 
     // get distanceScore
-    if (distanceMinutes <= 4.0) { // 0-4 mins
+    if (timeMinutes <= 4.0) { // 0-4 mins
       distanceScore = 35;
     } else {
-      distanceScore = 35 - distanceMinutes;
+      distanceScore = 35 - timeMinutes;
     }
 
     return (commentScore + ratingScore + distanceScore);
@@ -70,7 +70,7 @@ public class Recommended {
     return "No Results";
   }
 
-  public static int getDistanceMins() { // todo: get distance of store in mins
+  public static int getWalkingDistanceMins() { // todo: get distance of store in mins
     // calculate distance with store functions and compare with user info
     return 1; // example return for testing purposes
   }
