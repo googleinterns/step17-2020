@@ -8,10 +8,10 @@ var coffeeShopInfo = [];
 /** Creates a map that shows all coffee shops around the user. */
 function createMap() {
   // Set default location at new york city
-  var defaultLcation = new google.maps.LatLng(40.7128, -74.0060);
+  var defaultLocation = new google.maps.LatLng(40.7128, -74.0060);
   map = new google.maps.Map(
     document.getElementById('map'),
-    {center: defaultLcation, zoom: 13});
+    {center: defaultLocation, zoom: 13});
   
   // Global infowindow for coffee shop
   shopInfo = new google.maps.InfoWindow();
@@ -28,7 +28,9 @@ function getUserLocation() {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        map.setCenter(userPos);
+        if (typeof map !== "undefined") {
+          map.setCenter(userPos);
+        }
         coffeeShopRequest(userPos);
       },
       function() {

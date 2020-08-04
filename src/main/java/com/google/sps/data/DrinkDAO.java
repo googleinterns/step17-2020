@@ -49,8 +49,8 @@ public class DrinkDAO {
             .addFilter("store", Query.FilterOperator.EQUAL, storeID)
             .addFilter("name", Query.FilterOperator.EQUAL, name);
     List<Drink> drinks = getDrinks(query);
-    
-    // Check if the drink in that store is already in saved in datastore
+
+    // Check if the drink in that store is already saved in datastore
     // If not, add a new entity
     if (drinks.isEmpty()) {
       Entity drinkEntity = new Entity("Drink");
@@ -62,8 +62,8 @@ public class DrinkDAO {
 
       drinkDataStore.put(drinkEntity);
       return new Drink(name, storeID, newRating, 1.0, drinkEntity);
-    
-    // If yes, update the average rating of the drink
+
+      // If yes, update the average rating of the drink
     } else if (drinks.size() == 1) {
       Drink drink = drinks.get(0);
       drinkDataStore.put(drink.updateAverageRating(newRating));

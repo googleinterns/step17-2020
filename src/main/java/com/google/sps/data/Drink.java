@@ -88,7 +88,7 @@ public class Drink implements Comparable<Drink> {
     return this.avgRating;
   }
 
-  public double roundToOneDecimalPlace(double num) {
+  public static double roundToOneDecimalPlace(double num) {
     return Math.round(num * 10) / 10.0;
   }
 }

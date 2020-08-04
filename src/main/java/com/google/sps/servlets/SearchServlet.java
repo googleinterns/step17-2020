@@ -40,8 +40,7 @@ public class SearchServlet extends HttpServlet {
     if (request.getParameter("filter").equals("By Distance")) {
       Set<Drink> drinksSet = Drink.searchForDrink(name);
       // A set of store IDs that contains the drink
-      Set<String> stores =
-          drinksSet.stream().map(Drink::getStore).collect(Collectors.toCollection(HashSet::new));
+      Set<String> stores = drinksSet.stream().map(Drink::getStore).collect(Collectors.toSet());
 
       for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
         Map<String, String> coffeeShop = itr.next();
@@ -68,7 +67,8 @@ public class SearchServlet extends HttpServlet {
           Map<String, String> coffeeShop = itr.next();
 
           if (coffeeShop.get("store").equals(drink.getStore())) {
-            coffeeShop.put("rating", Double.toString(drink.getRating()));
+            coffeeShop.put(
+                "rating", Double.toString(Drink.roundToOneDecimalPlace(drink.getRating())));
             intersection.add(coffeeShop);
             break;
           }
