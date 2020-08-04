@@ -28,7 +28,7 @@ function drawChart() {
 
   const options = {
     'title': 'Store Ratings',
-    'width':600,
+    'width':500,
     'height':500
   };
 
