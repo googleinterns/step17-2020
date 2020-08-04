@@ -14,11 +14,31 @@
 
 package com.google.sps.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** Represents a comment in store or user page. */
 public class TSP {
 
-  public static List<Map<String, Map<int, int>>> constructAdjacencyMatrix(
-      List<Map<String, String>> coffeeShops) {
+  private Map<String, int> storeIdToIndex = new HashMap<>();
+  private List<List<double>> adjacencyMatrix = new ArrayList<>();
+
+  public static void constructAdjacencyMatrix(
+      List<Map<String, String>> coffeeShops, double userLat, double userLng) {
+    for (int i = 0; i < coffeeShops.size(); i++) {
+      double lat2 = coffeeShops.get(i).get("lat");
+      double lon2 = coffeeShops.get(i).get("lng");
+      adjacencyMatrix.get(0).set(i + 1, haversineDistance(userLat, userLng, lat2, lon2));
+    }
+    for (int i = 0; i < coffeeShops.size(); i++) {
+      for (int j = 0; j < coffeeShops.size(); j++) {
+        double lat1 = coffeeShops.get(i).get("lat");
+        double lon1 = coffeeShops.get(i).get("lng");
+        double lat2 = coffeeShops.get(j).get("lat");
+        double lon2 = coffeeShops.get(j).get("lng");
+        adjacencyMatrix.get(0).set(i + 1, haversineDistance(lat1, lng1, lat2, lon2));
+      }
+    }
     return;
   }
 
@@ -61,7 +81,7 @@ public class TSP {
     // of traversal and "ans"
     // Finally return to check for more possible values
     if (count == (n - 1)) {
-      ans = Math.min(ans, cost + adjacencyMatrix[currPos][0]);
+      ans = Math.min(ans, cost + adjacencyMatrix[0][currPos]);
       return ans;
     }
 

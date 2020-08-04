@@ -4,29 +4,79 @@
     <meta charset="UTF-8">
     <title>TYD Home</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata">
+    <style>
+    body {font-family: "Lato", sans-serif}
+    .mySlides {display: none}
+    </style>
     <script src="script.js"></script>
   </head>
   <body onload="determineLogin()" id= "background">
 
-<nav id="navbar">
+<!-- Links (sit on top) -->
+<!-- <div class="w3-top">
+  <div class="w3-bar w3-black w3-card">
+    <div class="w3-col s3">
+      <a href="index.html" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="user.html" class="w3-bar-item w3-button w3-padding-large">PROFILE</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="store.html" class="w3-bar-item w3-button w3-padding-large">EXPLORE AND REVIEW</a>
+    </div>
+    <div class="w3-col s3">
+      <a href="search.html" class="w3-bar-item w3-button w3-padding-large">SEARCH FOR A DRINK!</a>
+    </div>
+  </div>
+</div> -->
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-black w3-card">
+    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="index.html" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+    <a href="user.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">PROFILE</a>
+    <a href="store.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">EXPLORE AND REVIEW</a>
+    <a href="search.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">SEARCH FOR A DRINK!</a>
+    <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right">Login</a>
+  </div>
+</div>
+
+<!-- <nav id="navbar">
    <a href="index.html" id="active" class="button">Home</a>
    <a href="user.html" class="button">Profile</a>
    <a href="store.html" class="button">Explore</a> 
    <a href="search.html" class="button">Search for a drink!</a> 
-</nav>
+</nav> -->
 <nav id="loginbar">
       <div id="form"></div>
       <div id="login-container"></div>
       <div id="email"></div>
 </nav>
+
+<!-- Add a background color and large text to the whole page -->
+<div class="w3-sand w3-grayscale w3-large">
+
+<!-- About Container -->
+<div class="w3-container" id="about">
+  <div class="w3-content" style="max-width:700px">
+    <h5 class="w3-center w3-padding-64"><span class="w3-tag w3-wide">About TYD Coffee</span></h5>
+    <p class="w3-justify">Here at TYD Coffee, we have created a platform for users to leave reviews on their favorite store's drinks!</p>
+    <p class="w3-justify">To get started and experience TYD Coffee, go ahead and log in!</p>
+    <p class="w3-justify">You can look for local coffee shops with our 'Explore and Review' tab and from there you can click on which stores you would like to read or make reviews!</p>
+  </div>
+</div>
     
-     <h1> Welcome To TYD Coffee! </h1>
+     <!-- <h1> Welcome To TYD Coffee! </h1>
 
      <br><br>
 
     <div> Here at TYD Coffee, we have created a platform for users to leave reviews on their favorite store's drinks! </div> 
     <div> To get started and experience TYD Coffee, go ahead and log in!  </div>
-    <div> You can look for local coffee shops with our 'Explore' tab and from there you can click on which stores you would like to read or make reviews! </div>
+    <div> You can look for local coffee shops with our 'Explore' tab and from there you can click on which stores you would like to read or make reviews! </div> -->
 
   </body>
 </html>
