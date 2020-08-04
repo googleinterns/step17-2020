@@ -120,15 +120,7 @@ function storeComment(email) {
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)
   });
-  // Make new comment into a drink object and display on the page
-  const drinkObj = new Object();
-  drinkObj.drink = drink.toLowerCase();
-  drinkObj.rating = rating.options[rating.selectedIndex].value;
-  drinkObj.content = content;
-  const ratingListElement = document.getElementById('comment-list');
-  ratingListElement.appendChild(createListElement(drinkObj));
-  clearInput();
-  window.location.reload();//this will reload the page so the review section is shown as updated
+  window.location.reload();
 }
 
 /** Add to the appropriate row on the chart when a new comment is received */
@@ -137,8 +129,3 @@ function updateChart() {
   ratingMap[rating.options[rating.selectedIndex].value]++;
 }
 
-/** Clears the input box in coffeeshop.html page. */
-function clearInput() {
-  document.getElementById("drink").value = "";
-  document.getElementById("content").value = "";
-}

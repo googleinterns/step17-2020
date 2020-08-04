@@ -16,6 +16,7 @@ package com.google.sps.data;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import java.util.List;
 import java.util.Set;
 import org.junit.After;
 import org.junit.Assert;
@@ -64,27 +65,81 @@ public final class DrinkDAOTest {
   }
 
   @Test
+  public void testGetDrinksByName() {
+    Drink a = DrinkDAO.saveDrink(DRINK_A, ratingA, storeIDA);
+    Drink b = DrinkDAO.saveDrink(DRINK_A, ratingB, storeIDB);
+    Drink c = DrinkDAO.saveDrink(DRINK_B, ratingC, storeIDC);
+    Drink d = DrinkDAO.saveDrink(DRINK_B, ratingD, storeIDD);
+
+    List<Drink> drinks = DrinkDAO.getDrinksByName(DRINK_A);
+    Assert.assertEquals(drinks.size(), 2);
+    for (Drink drink : drinks) {
+      Assert.assertTrue(drink.getName().equals(DRINK_A));
+    }
+    drinks = DrinkDAO.getDrinksByName(DRINK_B);
+    Assert.assertEquals(drinks.size(), 2);
+    for (Drink drink : drinks) {
+      Assert.assertTrue(drink.getName().equals(DRINK_B));
+    }
+  }
+
+  @Test
+  public void testSearchForDrinkByRating() {
+    Drink a = DrinkDAO.saveDrink(DRINK_A, ratingA, storeIDA);
+    Drink b = DrinkDAO.saveDrink(DRINK_A, ratingB, storeIDB);
+    Drink c = DrinkDAO.saveDrink(DRINK_A, ratingC, storeIDC);
+    Drink d = DrinkDAO.saveDrink(DRINK_A, ratingD, storeIDD);
+    Drink e = DrinkDAO.saveDrink(DRINK_A, ratingE, storeIDE);
+    Drink f = DrinkDAO.saveDrink(DRINK_B, ratingA, storeIDA);
+    Drink g = DrinkDAO.saveDrink(DRINK_B, ratingB, storeIDB);
+
+    List<Drink> drinks = Drink.searchForDrinkByRating(DRINK_A);
+    Drink resultD = drinks.get(0);
+    Drink resultC = drinks.get(1);
+    Drink resultE = drinks.get(2);
+    Drink resultA = drinks.get(3);
+    Drink resultB = drinks.get(4);
+
+    Assert.assertEquals(d.getStore(), resultD.getStore());
+    Assert.assertEquals(c.getStore(), resultC.getStore());
+    Assert.assertEquals(e.getStore(), resultE.getStore());
+    Assert.assertEquals(a.getStore(), resultA.getStore());
+    Assert.assertEquals(b.getStore(), resultB.getStore());
+
+    drinks = Drink.searchForDrinkByRating(DRINK_B);
+    resultA = drinks.get(0);
+    resultB = drinks.get(1);
+    Assert.assertEquals(a.getStore(), resultA.getStore());
+    Assert.assertEquals(b.getStore(), resultB.getStore());
+  }
+
+  @Test
   public void testSearchForDrink() {
-    Drink a = DrinkDAO.saveDrink(DRINK_A, ratingA, numRatingsA, storeIDA);
-    Drink b = DrinkDAO.saveDrink(DRINK_A, ratingB, numRatingsB, storeIDB);
-    Drink c = DrinkDAO.saveDrink(DRINK_B, ratingC, numRatingsC, storeIDC);
-    Drink d = DrinkDAO.saveDrink(DRINK_B, ratingD, numRatingsD, storeIDD);
+    Drink a = DrinkDAO.saveDrink(DRINK_A, ratingA, storeIDA);
+    Drink b = DrinkDAO.saveDrink(DRINK_A, ratingB, storeIDB);
+    Drink c = DrinkDAO.saveDrink(DRINK_B, ratingC, storeIDC);
+    Drink d = DrinkDAO.saveDrink(DRINK_B, ratingD, storeIDD);
 
     Set<Drink> drinks = Drink.searchForDrink(DRINK_A);
     for (Drink drink : drinks) {
+      Assert.assertTrue(drink.getName().equals(DRINK_A));
       Assert.assertTrue((drink.getStore().equals(storeIDA)) || (drink.getStore().equals(storeIDB)));
     }
     drinks = Drink.searchForDrink(DRINK_B);
     for (Drink drink : drinks) {
+      Assert.assertTrue(drink.getName().equals(DRINK_B));
       Assert.assertTrue((drink.getStore().equals(storeIDC)) || (drink.getStore().equals(storeIDD)));
     }
   }
 
   @Test
   public void testUpdateAverageRating() {
-    Drink a = DrinkDAO.saveDrink(DRINK_A, ratingA, numRatingsA, storeIDA);
-    a.updateAverageRating(NEW_RATING);
-    double expected = 2.5833;
+    Drink a = DrinkDAO.saveDrink(DRINK_A, ratingA, storeIDA);
+    for (int i = 0; i < 10; i++) {
+      a.updateAverageRating(NEW_RATING);
+    }
+    // 10 ratings of 5.0 and 1 rating of 2.5
+    double expected = 4.7727;
     Assert.assertEquals(expected, a.getRating(), EPSILON);
   }
 }
