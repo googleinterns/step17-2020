@@ -17,6 +17,7 @@ package com.google.sps.servlets;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import com.google.sps.data.CommentDAO;
+import com.google.sps.data.DrinkDAO;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
@@ -56,5 +57,6 @@ public class CommentServlet extends HttpServlet {
     String email = request.getParameter("email");
 
     CommentDAO.storeComment(rating, drink, content, store, email);
+    DrinkDAO.saveDrink(drink, (double) rating, store);
   }
 }
