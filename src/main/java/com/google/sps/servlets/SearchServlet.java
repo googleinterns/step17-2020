@@ -38,44 +38,55 @@ public class SearchServlet extends HttpServlet {
         gson.fromJson(request.getParameter("coffeeshop"), ArrayList.class);
 
     if (request.getParameter("filter").equals("By Distance")) {
-      Set<Drink> drinksSet = Drink.searchForDrink(name);
-      // A set of store IDs that contains the drink
-      Set<String> stores = drinksSet.stream().map(Drink::getStore).collect(Collectors.toSet());
-
-      for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
-        Map<String, String> coffeeShop = itr.next();
-
-        // Check if the nearby coffee shop is in the set of stores returned by searchForDrink
-        if (!stores.contains(coffeeShop.get("store"))) {
-          itr.remove();
-        }
-      }
+      searchDrinkByDistance(coffeeShops, name);
       response.setContentType("application/json;");
       response.getWriter().println(gson.toJson(coffeeShops));
 
     } else {
-      // Create a intersection between search results and nearby coffee shops
-      List<Map<String, String>> intersection = new ArrayList<>();
-      List<Drink> drinks = Drink.searchForDrinkByRating(name);
-
-      // Iterate through the search results to see if each store is in the list of nearby coffee
-      // shops
-      for (Iterator<Drink> drinkItr = drinks.iterator(); drinkItr.hasNext(); ) {
-        Drink drink = drinkItr.next();
-
-        for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
-          Map<String, String> coffeeShop = itr.next();
-
-          if (coffeeShop.get("store").equals(drink.getStore())) {
-            coffeeShop.put(
-                "rating", Double.toString(Drink.roundToOneDecimalPlace(drink.getRating())));
-            intersection.add(coffeeShop);
-            break;
-          }
-        }
-      }
+      List<Map<String, String>> intersection = searchDrinkByRating(coffeeShops, name);
       response.setContentType("application/json;");
       response.getWriter().println(gson.toJson(intersection));
     }
+  }
+
+  private void searchDrinkByDistance(List<Map<String, String>> coffeeShops, String name) {
+    Set<Drink> drinksSet = Drink.searchForDrink(name);
+    // A set of store IDs that contains the drink
+    Set<String> stores = drinksSet.stream().map(Drink::getStore).collect(Collectors.toSet());
+
+    for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
+      Map<String, String> coffeeShop = itr.next();
+
+      // Check if the nearby coffee shop is in the set of stores returned by searchForDrink
+      if (!stores.contains(coffeeShop.get("store"))) {
+        itr.remove();
+      }
+    }
+    return;
+  }
+
+  private List<Map<String, String>> searchDrinkByRating(
+      List<Map<String, String>> coffeeShops, String name) {
+    // Create a intersection between search results and nearby coffee shops
+    List<Map<String, String>> intersection = new ArrayList<>();
+    List<Drink> drinks = Drink.searchForDrinkByRating(name);
+
+    // Iterate through the search results to see if each store is in the list of nearby coffee
+    // shops
+    for (Iterator<Drink> drinkItr = drinks.iterator(); drinkItr.hasNext(); ) {
+      Drink drink = drinkItr.next();
+
+      for (Iterator<Map<String, String>> itr = coffeeShops.iterator(); itr.hasNext(); ) {
+        Map<String, String> coffeeShop = itr.next();
+
+        if (coffeeShop.get("store").equals(drink.getStore())) {
+          coffeeShop.put(
+              "rating", Double.toString(Drink.roundToOneDecimalPlace(drink.getRating())));
+          intersection.add(coffeeShop);
+          break;
+        }
+      }
+    }
+    return intersection;
   }
 }
