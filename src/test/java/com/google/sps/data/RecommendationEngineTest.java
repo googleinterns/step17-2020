@@ -26,10 +26,14 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public final class RecommendationEngineTest {
-  private Drink DRINKA = new Drink("latte", "12345", 4.2, 12, null);
-  private Drink DRINKB = new Drink("cold brew", "54321", 4.8, 12, null);
-  private Drink DRINKC = new Drink("latte", "12345", 4.2, 12, null);
-  private Drink DRINKD = new Drink("cold brew", "54321", 4.8, 12, null);
+  private Drink DRINKA = new Drink("latte", "123", 4.8, 12, null);
+  private Drink DRINKB = new Drink("cold brew", "123", 4.8, 12, null);
+  private Drink DRINKC = new Drink("latte", "456", 4.2, 12, null);
+  private Drink DRINKD = new Drink("cold brew", "456", 4.2, 12, null);
+  private Drink DRINKE = new Drink("latte", "789", 1.5, 12, null);
+  private Drink DRINKF = new Drink("cold brew", "789", 1.5, 12, null);
+  private List<Drink> drinkList = new ArrayList<>();
+  private static final double DELTA = .0000001;
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
@@ -46,27 +50,44 @@ public final class RecommendationEngineTest {
 
   @Test
   public void testGetBestShop() {
-    List<Drink> drinkList = new ArrayList<>();
     drinkList.add(DRINKA);
     drinkList.add(DRINKB);
     drinkList.add(DRINKC);
     drinkList.add(DRINKD);
+    drinkList.add(DRINKE);
+    drinkList.add(DRINKF);
     List<String> idList = new ArrayList<>();
     for (Drink drink : drinkList) {
       idList.add(drink.getStore());
     }
     Assert.assertEquals(
-        RecommendationEngine.getBestShop(idList, "latte"),
+        "123",
         RecommendationEngine.getBestShop(
-            idList, "cold brew")); // change second parameter to expected value for assert equals
+            idList, "latte",
+            drinkList)); // change second parameter to expected value for assert equals
+    Assert.assertEquals("123", RecommendationEngine.getBestShop(idList, "cold brew", drinkList));
+    drinkList.clear();
   }
 
   @Test
   public void testGetScore() {
+    Assert.assertEquals(75.8, RecommendationEngine.getScore(DRINKA), DELTA);
+    Assert.assertEquals(75.8, RecommendationEngine.getScore(DRINKB), DELTA);
+    Assert.assertEquals(71.6, RecommendationEngine.getScore(DRINKC), DELTA);
+    Assert.assertEquals(71.6, RecommendationEngine.getScore(DRINKD), DELTA);
+    Assert.assertEquals(52.7, RecommendationEngine.getScore(DRINKE), DELTA);
+    Assert.assertEquals(52.7, RecommendationEngine.getScore(DRINKE), DELTA);
+  }
 
-    Assert.assertEquals(
-        RecommendationEngine.getScore(DRINKA), RecommendationEngine.getScore(DRINKC));
-    Assert.assertEquals(
-        RecommendationEngine.getScore(DRINKB), RecommendationEngine.getScore(DRINKD));
+  @Test
+  public void testGetDrink() {
+    drinkList.add(DRINKA);
+    drinkList.add(DRINKB);
+    drinkList.add(DRINKC);
+    drinkList.add(DRINKD);
+    drinkList.add(DRINKE);
+    drinkList.add(DRINKF);
+    Assert.assertEquals(DRINKA, RecommendationEngine.getDrink("123", "latte", drinkList).get());
+    drinkList.clear();
   }
 }

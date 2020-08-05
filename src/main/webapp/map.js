@@ -1,5 +1,4 @@
 var map;
-var infoWindow;
 var shopInfo;
 var userPos;
 var geocoder;
@@ -9,16 +8,18 @@ var coffeeShopInfo = [];
 /** Creates a map that shows all coffee shops around the user. */
 function createMap() {
   // Set default location at new york city
-  var newyork = new google.maps.LatLng(40.7128, -74.0060);
+  var defaultLocation = new google.maps.LatLng(40.7128, -74.0060);
   map = new google.maps.Map(
     document.getElementById('map'),
-    {center: newyork, zoom: 13});
+    {center: defaultLocation, zoom: 13});
   
-  // Infowindow for to handle error in get user location
-  infoWindow = new google.maps.InfoWindow();
   // Global infowindow for coffee shop
   shopInfo = new google.maps.InfoWindow();
 
+  getUserLocation();
+}
+
+function getUserLocation() {
   // Try HTML5 geolocation to get user location.
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -27,22 +28,24 @@ function createMap() {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        map.setCenter(userPos);
+        if (typeof map !== "undefined") {
+          map.setCenter(userPos);
+        }
         coffeeShopRequest(userPos);
       },
       function() {
-        handleLocationError(true, infoWindow, map.getCenter());
+        handleLocationError(true);
       }
     );
   } else {
     // Browser doesn't support Geolocation
-    handleLocationError(false, infoWindow, map.getCenter());
+    handleLocationError(false);
   }
 }
 
 /**
 /* Request nearby coffee shop info
-/* Unit of radius: Metres. Maximum allowed is 50000 metres
+/* Unit of radius: Metres. Maximum allowed in Places API is 50000 metres
  */
 function coffeeShopRequest(userPos) {
 	var request = {
@@ -50,22 +53,23 @@ function coffeeShopRequest(userPos) {
     radius: '300',
     query: 'coffee shop'
   };
-  service = new google.maps.places.PlacesService(map);
+  if (typeof map === "undefined") {
+    service = new google.maps.places.PlacesService(document.createElement('div'));
+  } else {
+    service = new google.maps.places.PlacesService(map);
+  }
   service.textSearch(request, callback);
 }
 
-function handleLocationError(browserHasGeolocation, infoWindow, userPos) {
-  infoWindow.setPosition(userPos);
+function handleLocationError(browserHasGeolocation) {
   if (browserHasGeolocation) {
-  	infoWindow.setContent("The Geolocation service failed. Please enter a zip code to view nearby coffee shops.");
+  	alert("The Geolocation service failed. Please enter a zip code.");
   } else {
-  	infoWindow.setContent("Your browser doesn't support geolocation. Please enter a zip code to view nearby coffee shops.");
+  	alert("Your browser doesn't support geolocation. Please enter a zip code.");
   }
-  infoWindow.open(map);
 }
 
-/* Call this wherever needed to actually handle the display */
-function codeAddress() {
+function getCoffeeShopByZipcode() {
 	// Clear markers from previous search results
 	clearMarkers();
 	geocoder = new google.maps.Geocoder();
@@ -77,8 +81,10 @@ function codeAddress() {
       }
     }, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        // Got result, center the map and put it out there
-        map.setCenter(results[0].geometry.location);
+        // Centre the map at user location (if there is a Google Map on the page)
+        if (typeof map !== "undefined") {
+          map.setCenter(results[0].geometry.location);
+        }
         userPos = {
           lat: results[0].geometry.location.lat(),
           lng: results[0].geometry.location.lng()
@@ -96,6 +102,7 @@ function codeAddress() {
     if (document.URL.includes("store.html")) {
       for (var i = 0; i < results.length; i++) {
         createMarker(results[i]);
+        displayMarkers();
       }
     // Calculate distance for Search for a drink tab
     } else {
@@ -105,18 +112,20 @@ function codeAddress() {
           results[i].geometry.location.lng(), userPos.lat, userPos.lng);
         // Create coffeeshop array that contains the name, address
         // and distance from user
-        var coffeeShop = [];
-        coffeeShop.push(results[i].name);
-        coffeeShop.push(results[i].formatted_address);
-        coffeeShop.push(distance);
+        var coffeeShop = {
+          'name': results[i].name,
+          'address': results[i].formatted_address,
+          'store': results[i].place_id,
+          'distance': distance,
+          'lat': results[i].geometry.location.lat(),
+          'lng': results[i].geometry.location.lng()
+        };
         coffeeShopInfo.push(coffeeShop);
-        createMarker(results[i]);
         coffeeShopInfo.sort( function(a, b) {
-          return (a[2] - b[2]);
+          return (a['distance'] - b['distance']);
         });
       }
     }
-    displayMarkers();
   }
 }
 
@@ -133,6 +142,7 @@ function createMarker(place) {
   marker.addListener('click', () => {
     shopInfo.close();
     shopInfo.setContent('<a href=coffeeshop.html>' + place.name + '</a>');
+    
     // Save place name and address in local storage
     // to display in the coffeeshop page
     localStorage.setItem("shopName", place.name);
@@ -160,18 +170,18 @@ function clearMarkers() {
  */
 function haversine_distance(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
-  var dLat = degToRad(lat2-lat1);
-  var dLon = degToRad(lon2-lon1); 
+  var dLat = degreesToRadians(lat2-lat1);
+  var dLon = degreesToRadians(lon2-lon1); 
   var a = 
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) * 
+    Math.cos(degreesToRadians(lat1)) * Math.cos(degreesToRadians(lat2)) * 
     Math.sin(dLon/2) * Math.sin(dLon/2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   var d = R * c; // Distance in km
   return d;
 }
 
-function degToRad(deg) {
+function degreesToRadians(deg) {
   return deg * (Math.PI/180)
 }
 
@@ -194,4 +204,48 @@ function displayRoute(userPos, coffeeShop) {
       directionsDisplay.setDirections(response);
     }
   });
+}
+
+function searchForDrink() {
+  // Prompt user to enter a location
+  if (typeof userPos === "undefined") {
+    alert("Please enter a zip code before searching for a drink.")
+  }
+  var drink = document.getElementById("beverage").value;
+  var filtersElement = document.getElementById("filters");
+  var filter = filtersElement.options[filtersElement.selectedIndex].value;
+  var params = new URLSearchParams();
+  params.append('drink', drink);
+  params.append('filter', filter)
+  params.append('coffeeshop', JSON.stringify(coffeeShopInfo));
+  document.getElementById("store-list").innerHTML = "";
+
+  // Get results from search servlet
+  fetch('/search', {method: 'POST', body: params}).then(function(stores) {
+    return stores.json();
+  }).then(function(stores) {
+    const ratingListElement = document.getElementById('store-list');
+    stores.forEach((store) => {
+      ratingListElement.appendChild(createListElement(store));
+    })
+  }).catch(e => {
+    console.log(e)
+  });
+}
+
+function createListElement(store) {
+  const listElement = document.createElement('li');
+  listElement.className = 'store';
+  const storeElement = document.createElement('span');
+
+  // Display search by rating
+  if (store.rating !== undefined) {
+    storeElement.innerText = store.name + " at " + store.address + ", with a rating of " + store.rating;
+  
+  // Display search by distance
+  } else {
+    storeElement.innerText = store.name + " at " + store.address + ", " + store.distance + " km away.";
+  }
+  listElement.appendChild(storeElement);
+  return listElement;
 }

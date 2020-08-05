@@ -18,7 +18,11 @@
 #chart-container{
     border: thin solid black;
     height:500px;
+<<<<<<< HEAD
     width:500px;
+=======
+    width:600px;
+>>>>>>> 8697433218a43a7704f3916561f5514411d2237b
     margin-left:auto;
     margin-right: auto;
     text-align: center;

@@ -61,12 +61,16 @@ public class Drink implements Comparable<Drink> {
     return drinksSet;
   }
 
-  public double updateAverageRating(double newRating) {
+  public Entity updateAverageRating(double newRating) {
     this.avgRating = ((this.avgRating * this.numRatings) + newRating) / (this.numRatings + 1);
     this.numRatings++;
-    DrinkDAO.updateEntity(this.drinkEntity, this.numRatings, this.avgRating);
+    updateEntity();
+    return this.drinkEntity;
+  }
 
-    return this.avgRating;
+  public void updateEntity() {
+    drinkEntity.setProperty("rating", this.avgRating);
+    drinkEntity.setProperty("numRatings", this.numRatings);
   }
 
   public String getName() {
@@ -85,7 +89,7 @@ public class Drink implements Comparable<Drink> {
     return this.avgRating;
   }
 
-  public double roundToOneDecimalPlace(double num) {
+  public static double roundToOneDecimalPlace(double num) {
     return Math.round(num * 10) / 10.0;
   }
 }

@@ -7,14 +7,7 @@ import java.util.*;
 */
 public class RecommendationEngine {
 
-  public static Optional<Drink> getDrink(String storeId, String drinkName) {
-    List<Drink> drinkList = DrinkDAO.getDrinksByStore(storeId);
-    // for (Drink drink : drinkList) {
-    //   if (drink.getName().equals(drinkName)) {
-    //     return drink;
-    //   }
-    // }
-    // return null;
+  public static Optional<Drink> getDrink(String storeId, String drinkName, List<Drink> drinkList) {
     return drinkList.stream().filter(drink -> drink.getName().equals(drinkName)).findFirst();
   }
   // given a coffeeshop, return its tydrecommended score
@@ -51,11 +44,12 @@ public class RecommendationEngine {
     return (commentScore + ratingScore + distanceScore);
   }
   // this function returns the highest scored store from a list of stores
-  public static String getBestShop(List<String> listStoreIds, String inputBeverage) {
+  public static String getBestShop(
+      List<String> listStoreIds, String inputBeverage, List<Drink> drinkList) {
     double bestScore = 0.0;
     String highestScoredStore = "";
     for (String storeId : listStoreIds) {
-      Optional<Drink> drink = getDrink(storeId, inputBeverage);
+      Optional<Drink> drink = getDrink(storeId, inputBeverage, drinkList);
       if (drink.isPresent()) {
         double currentShopScore = getScore(drink.get());
         if (currentShopScore > bestScore) {
