@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public final class RecommendTest {
+public final class RecommendationEngineTest {
   private Drink DRINKA = new Drink("latte", "12345", 4.2, 12, null);
   private Drink DRINKB = new Drink("cold brew", "54321", 4.8, 12, null);
   private Drink DRINKC = new Drink("latte", "12345", 4.2, 12, null);
@@ -46,23 +46,27 @@ public final class RecommendTest {
 
   @Test
   public void testGetBestShop() {
-    List<Drink> drinkList = new ArrayList<Drink>();
+    List<Drink> drinkList = new ArrayList<>();
     drinkList.add(DRINKA);
     drinkList.add(DRINKB);
     drinkList.add(DRINKC);
     drinkList.add(DRINKD);
-    List<String> idList = new ArrayList<String>();
+    List<String> idList = new ArrayList<>();
     for (Drink drink : drinkList) {
       idList.add(drink.getStore());
     }
     Assert.assertEquals(
-        Recommended.getBestShop(idList, "latte"), Recommended.getBestShop(idList, "cold brew"));
+        RecommendationEngine.getBestShop(idList, "latte"),
+        RecommendationEngine.getBestShop(
+            idList, "cold brew")); // change second parameter to expected value for assert equals
   }
 
   @Test
   public void testGetScore() {
 
-    Assert.assertEquals(Recommended.getScore(DRINKA), Recommended.getScore(DRINKC));
-    Assert.assertEquals(Recommended.getScore(DRINKB), Recommended.getScore(DRINKD));
+    Assert.assertEquals(
+        RecommendationEngine.getScore(DRINKA), RecommendationEngine.getScore(DRINKC));
+    Assert.assertEquals(
+        RecommendationEngine.getScore(DRINKB), RecommendationEngine.getScore(DRINKD));
   }
 }

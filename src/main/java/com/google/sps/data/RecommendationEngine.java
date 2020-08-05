@@ -7,14 +7,15 @@ import java.util.*;
 */
 public class RecommendationEngine {
 
-  public static Drink getDrink(String storeId, String drinkName) {
+  public static Optional<Drink> getDrink(String storeId, String drinkName) {
     List<Drink> drinkList = DrinkDAO.getDrinksByStore(storeId);
-    for (Drink drink : drinkList) {
-      if (drink.getName().equals(drinkName)) {
-        return drink;
-      }
-    }
-    return null;
+    // for (Drink drink : drinkList) {
+    //   if (drink.getName().equals(drinkName)) {
+    //     return drink;
+    //   }
+    // }
+    // return null;
+    return drinkList.stream().filter(drink -> drink.getName().equals(drinkName)).findFirst();
   }
   // given a coffeeshop, return its tydrecommended score
   public static double getScore(Drink drink) {
@@ -54,9 +55,9 @@ public class RecommendationEngine {
     double bestScore = 0.0;
     String highestScoredStore = "";
     for (String storeId : listStoreIds) {
-      Drink d = getDrink(storeId, inputBeverage);
-      if (d != null) {
-        double currentShopScore = getScore(d);
+      Optional<Drink> drink = getDrink(storeId, inputBeverage);
+      if (drink.isPresent()) {
+        double currentShopScore = getScore(drink.get());
         if (currentShopScore > bestScore) {
           highestScoredStore = storeId;
           bestScore = currentShopScore;
@@ -70,7 +71,8 @@ public class RecommendationEngine {
     return "No Results";
   }
 
-  public static int getWalkingDistanceMins() { // todo: get distance of store in mins
+  public static int getWalkingDistanceMins() {
+    // TODO: return duration of walk in minutes
     // calculate distance with store functions and compare with user info
     return 1; // example return for testing purposes
   }

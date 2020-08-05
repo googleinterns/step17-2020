@@ -34,7 +34,7 @@ public class RecommendServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String beverage = request.getParameter("beverageRequested");
     System.out.println(beverage);
-    List<String> listStoreIds = new ArrayList<String>();
-    RecommendedationEngine.getBestShop(listStoreIds, beverage);
+    List<String> listStoreIds = new ArrayList<>();
+    RecommendationEngine.getBestShop(listStoreIds, beverage);
   }
 }
