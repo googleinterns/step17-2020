@@ -60,11 +60,7 @@ public final class RecommendationEngineTest {
     for (Drink drink : drinkList) {
       idList.add(drink.getStore());
     }
-    Assert.assertEquals(
-        "123",
-        RecommendationEngine.getBestShop(
-            idList, "latte",
-            drinkList)); // change second parameter to expected value for assert equals
+    Assert.assertEquals("123", RecommendationEngine.getBestShop(idList, "latte", drinkList));
     Assert.assertEquals("123", RecommendationEngine.getBestShop(idList, "cold brew", drinkList));
     drinkList.clear();
   }
