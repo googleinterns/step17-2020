@@ -17,6 +17,7 @@ package com.google.sps.data;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.util.*;
+import java.util.stream.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,9 +58,7 @@ public final class RecommendationEngineTest {
     drinkList.add(DRINKE);
     drinkList.add(DRINKF);
     List<String> idList = new ArrayList<>();
-    for (Drink drink : drinkList) {
-      idList.add(drink.getStore());
-    }
+    idList = drinkList.stream().map(Drink::getStore).collect(Collectors.toList());
     Assert.assertEquals("123", RecommendationEngine.getBestShop(idList, "latte", drinkList));
     Assert.assertEquals("123", RecommendationEngine.getBestShop(idList, "cold brew", drinkList));
     drinkList.clear();

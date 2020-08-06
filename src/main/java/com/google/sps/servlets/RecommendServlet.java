@@ -35,6 +35,7 @@ public class RecommendServlet extends HttpServlet {
     String beverage = request.getParameter("beverageRequested");
     System.out.println(beverage);
     List<String> listStoreIds = new ArrayList<>();
-    // RecommendationEngine.getBestShop(listStoreIds, beverage);
+    List<Drink> drinkList = new ArrayList<>();
+    RecommendationEngine.getBestShop(listStoreIds, beverage, drinkList);
   }
 }
