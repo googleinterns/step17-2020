@@ -14,47 +14,46 @@
 
 package com.google.sps.data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /** Represents a comment in store or user page. */
 public class TSP {
 
-  private Map<String, int> storeIdToIndex = new HashMap<>();
-  private List<List<double>> adjacencyMatrix = new ArrayList<>();
+  // private Map<String, Integer> indexToStoreId = new HashMap<>();
 
-  public static void constructAdjacencyMatrix(
+  public static double[][] constructAdjacencyMatrix(
       List<Map<String, String>> coffeeShops, double userLat, double userLng) {
+    // There are size of coffee shops + 1 (user location) points in total
+    double[][] adjacencyMatrix = new double[coffeeShops.size() + 1][coffeeShops.size() + 1];
+
     for (int i = 0; i < coffeeShops.size(); i++) {
-      double lat2 = coffeeShops.get(i).get("lat");
-      double lon2 = coffeeShops.get(i).get("lng");
-      adjacencyMatrix.get(0).set(i + 1, haversineDistance(userLat, userLng, lat2, lon2));
+      adjacencyMatrix[0][i + 1] = Double.parseDouble(coffeeShops.get(i).get("distance"));
     }
     for (int i = 0; i < coffeeShops.size(); i++) {
       for (int j = 0; j < coffeeShops.size(); j++) {
-        double lat1 = coffeeShops.get(i).get("lat");
-        double lon1 = coffeeShops.get(i).get("lng");
-        double lat2 = coffeeShops.get(j).get("lat");
-        double lon2 = coffeeShops.get(j).get("lng");
-        adjacencyMatrix.get(0).set(i + 1, haversineDistance(lat1, lng1, lat2, lon2));
+        double lat1 = Double.parseDouble(coffeeShops.get(i).get("lat"));
+        double lon1 = Double.parseDouble(coffeeShops.get(i).get("lng"));
+        double lat2 = Double.parseDouble(coffeeShops.get(j).get("lat"));
+        double lon2 = Double.parseDouble(coffeeShops.get(j).get("lng"));
+        adjacencyMatrix[i + 1][j + 1] = haversineDistance(lat1, lon1, lat2, lon2);
       }
     }
-    return;
+    return adjacencyMatrix;
   }
 
   /**
-   * /* Calculates the straight line distance between two /* sets of latitutes and longitutes /* A
+   * /* Calculates the straight line distance between two sets of latitutes and longitutes A
    * breakdown of the haversine formula can be found at /*
    * http://www.movable-type.co.uk/scripts/latlong.html
    */
   public static double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
     int R = 6371; // Radius of the earth in km
-    double dLat = degToRad(lat2 - lat1);
-    double dLon = degToRad(lon2 - lon1);
+    double dLat = degreeToRadian(lat2 - lat1);
+    double dLon = degreeToRadian(lon2 - lon1);
     double a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2)
-            + Math.cos(degToRad(lat1))
-                * Math.cos(degToRad(lat2))
+            + Math.cos(degreeToRadian(lat1))
+                * Math.cos(degreeToRadian(lat2))
                 * Math.sin(dLon / 2)
                 * Math.sin(dLon / 2);
     double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -67,21 +66,30 @@ public class TSP {
   }
 
   /* Function to find the minimum weight */
-  public static int travelingSalesman(
-      int[][] adjacencyMatrix,
+  public static double travelingSalesman(
+      double[][] adjacencyMatrix,
       boolean[] visited,
       int currPos,
       int n,
       int count,
-      int cost,
-      int ans) {
+      double cost,
+      double ans,
+      List<Integer> bestPath,
+      List<Integer> currPath) {
 
-    // If last node is reached
+    // If last node is reached (not counting index 0 which is the user location)
     // keep the minimum value out of the total cost
     // of traversal and "ans"
     // Finally return to check for more possible values
     if (count == (n - 1)) {
-      ans = Math.min(ans, cost + adjacencyMatrix[0][currPos]);
+      double currDist = cost + adjacencyMatrix[0][currPos];
+      if (ans > currDist) {
+        ans = currDist;
+        bestPath.clear();
+        bestPath.addAll(currPath);
+        // Add user location to the end of the path
+        bestPath.add(0);
+      }
       return ans;
     }
 
@@ -94,11 +102,22 @@ public class TSP {
 
         // Mark as visited
         visited[i] = true;
+        currPath.add(i);
         ans =
-            tsp(adjacencyMatrix, visited, i, n, count + 1, cost + adjacencyMatrix[currPos][i], ans);
+            travelingSalesman(
+                adjacencyMatrix,
+                visited,
+                i,
+                n,
+                count + 1,
+                cost + adjacencyMatrix[currPos][i],
+                ans,
+                bestPath,
+                currPath);
 
         // Mark ith node as unvisited
         visited[i] = false;
+        currPath.remove(currPath.size() - 1);
       }
     }
     return ans;
