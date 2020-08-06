@@ -67,15 +67,22 @@ public final class TSPTest {
     adjacencyMatrix[1][4] = 0.32;
     adjacencyMatrix[0][5] = 0.99;
     adjacencyMatrix[3][5] = 0.38;
-    boolean[] v = new boolean[size];
+
     double ans = Double.MAX_VALUE;
     double min = Double.MAX_VALUE;
+    List<Integer> finalBestPath = new ArrayList<>();
+
+    // Loop through all coffee shops as the starting point of the path
     for (int i = 1; i < size; i++) {
       List<Integer> bestPath = new ArrayList<>();
       List<Integer> currPath = new ArrayList<>();
+      boolean[] v = new boolean[size];
+      currPath.add(i);
+      v[i] = true;
       ans = TSP.travelingSalesman(adjacencyMatrix, v, i, size, 1, 0, ans, bestPath, currPath);
       if (ans < min) {
         min = ans;
+        finalBestPath = bestPath;
       }
     }
     Assert.assertEquals(min, 1.2, EPSILON);
@@ -86,10 +93,13 @@ public final class TSPTest {
     // Case 1: Two points are the exact same points
     double distance = TSP.haversineDistance(userLat, userLng, userLat, userLng);
     Assert.assertEquals(distance, 0, EPSILON);
+
     distance = TSP.haversineDistance(userLat, userLng, starbucksLat, starbucksLng);
     Assert.assertEquals(distance, 2.896858, EPSILON);
+
     distance = TSP.haversineDistance(bearclawLat, bearclawLng, starbucksLat, starbucksLng);
     Assert.assertEquals(distance, 2.478540, EPSILON);
+
     double reverse = TSP.haversineDistance(starbucksLat, starbucksLng, bearclawLat, bearclawLng);
     Assert.assertEquals(distance, reverse, EPSILON);
   }
@@ -103,6 +113,7 @@ public final class TSPTest {
     jsonObject1.put("lng", "-83.712071");
     jsonObject1.put("name", "Bearclaw Coffee Co");
     jsonObject1.put("store", "ChIJC0rOXQKvPIgRUWwvH7uoU5k");
+
     JSONObject jsonObject2 = new JSONObject();
     jsonObject2.put("address", "1214 S University Ave, Ann Arbor, MI 48104, United States");
     jsonObject2.put("distance", "2.4537345227595146");
@@ -110,12 +121,15 @@ public final class TSPTest {
     jsonObject2.put("lng", "-83.734014");
     jsonObject2.put("name", "Starbucks");
     jsonObject2.put("store", "ChIJkzy_TkSuPIgRO7_JrkzTTI0");
+
     JSONArray array = new JSONArray();
     array.add(jsonObject1);
     array.add(jsonObject2);
+
     Gson gson = new Gson();
     List<Map<String, String>> coffeeShops = gson.fromJson(array.toString(), ArrayList.class);
     double[][] adjacencyMatrix = TSP.constructAdjacencyMatrix(coffeeShops, userLat, userLng);
+
     Assert.assertEquals(adjacencyMatrix[1][2], adjacencyMatrix[2][1], EPSILON);
     Assert.assertEquals(adjacencyMatrix[1][2], 2.478540, EPSILON);
     Assert.assertEquals(adjacencyMatrix[0][0], 0, EPSILON);

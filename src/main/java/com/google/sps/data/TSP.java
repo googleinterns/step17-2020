@@ -78,8 +78,8 @@ public class TSP {
       List<Integer> currPath) {
 
     // If last node is reached (not counting index 0 which is the user location)
-    // keep the minimum value out of the total cost
-    // of traversal and "ans"
+    // Update "ans" if the cost of current traversal is less than "ans"
+    // Update bestPath so far when "ans" get updated
     // Finally return to check for more possible values
     if (count == (n - 1)) {
       double currDist = cost + adjacencyMatrix[0][currPos];
