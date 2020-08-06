@@ -35,6 +35,7 @@ public final class RecommendationEngineTest {
   private Drink DRINKF = new Drink("cold brew", "789", 1.5, 12, null);
   private List<Drink> drinkList = new ArrayList<>();
   private static final double DELTA = .0000001;
+  private String storeIdAB = "123";
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
@@ -59,8 +60,9 @@ public final class RecommendationEngineTest {
     drinkList.add(DRINKF);
     List<String> idList = new ArrayList<>();
     idList = drinkList.stream().map(Drink::getStore).collect(Collectors.toList());
-    Assert.assertEquals("123", RecommendationEngine.getBestShop(idList, "latte", drinkList));
-    Assert.assertEquals("123", RecommendationEngine.getBestShop(idList, "cold brew", drinkList));
+    Assert.assertEquals(storeIdAB, RecommendationEngine.getBestShop(idList, "latte", drinkList));
+    Assert.assertEquals(
+        storeIdAB, RecommendationEngine.getBestShop(idList, "cold brew", drinkList));
     drinkList.clear();
   }
 
@@ -82,7 +84,7 @@ public final class RecommendationEngineTest {
     drinkList.add(DRINKD);
     drinkList.add(DRINKE);
     drinkList.add(DRINKF);
-    Assert.assertEquals(DRINKA, RecommendationEngine.getDrink("123", "latte", drinkList).get());
+    Assert.assertEquals(DRINKA, RecommendationEngine.getDrink(storeIdAB, "latte", drinkList).get());
     drinkList.clear();
   }
 }
