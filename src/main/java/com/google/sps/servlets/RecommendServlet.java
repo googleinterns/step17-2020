@@ -29,7 +29,8 @@ public class RecommendServlet extends HttpServlet {
   @Override
   /**
    * This method takes input from the beverageRequested box and puts it through the TYDRecommended
-   * function
+   * function TYDRecommended looks through stores near the user and looks for the best store to get
+   * the user specified beverage from (via a weighting formula)
    */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String beverage = request.getParameter("beverageRequested");
