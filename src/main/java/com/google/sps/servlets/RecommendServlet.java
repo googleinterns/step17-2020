@@ -23,6 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 // Servlet that handles recommendations
+// This servlet will be used for order functionality
+// so that when a user is requesting a beverage,
+// this will return the best store to get this beverage from
+// by using RecommendationEngine functions
 @WebServlet("/recommend")
 public class RecommendServlet extends HttpServlet {
 

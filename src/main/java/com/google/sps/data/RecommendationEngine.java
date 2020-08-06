@@ -1,6 +1,7 @@
 package com.google.sps.data;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 /*This class holds the TYDRecommended algorithm which will give the
     user a recommended store to get their desired beverage from.
@@ -10,7 +11,7 @@ public class RecommendationEngine {
   public static Optional<Drink> getDrink(String storeId, String drinkName, List<Drink> drinkList) {
     return drinkList.stream().filter(drink -> drink.getName().equals(drinkName)).findFirst();
   }
-  // given a coffeeshop, return its tydrecommended score
+  // given a coffeeshop, return its TYDRecommended score
   public static double getScore(Drink drink) {
     int numComments = (int) drink.getNumRatings();
     double avgRating = drink.getRating();

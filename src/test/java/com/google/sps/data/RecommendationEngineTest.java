@@ -16,7 +16,8 @@ package com.google.sps.data;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.*;
 import org.junit.After;
 import org.junit.Assert;
@@ -27,12 +28,12 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public final class RecommendationEngineTest {
-  private final Drink DRINKA = new Drink("latte", "123", 4.8, 12, null);
-  private final Drink DRINKB = new Drink("cold brew", "123", 4.8, 12, null);
-  private final Drink DRINKC = new Drink("latte", "456", 4.2, 12, null);
-  private final Drink DRINKD = new Drink("cold brew", "456", 4.2, 12, null);
-  private final Drink DRINKE = new Drink("latte", "789", 1.5, 12, null);
-  private final Drink DRINKF = new Drink("cold brew", "789", 1.5, 12, null);
+  private static final Drink DRINK_A = new Drink("latte", "123", 4.8, 12, null);
+  private static final Drink DRINK_B = new Drink("cold brew", "123", 4.8, 12, null);
+  private static final Drink DRINK_C = new Drink("latte", "456", 4.2, 12, null);
+  private static final Drink DRINK_D = new Drink("cold brew", "456", 4.2, 12, null);
+  private static final Drink DRINK_E = new Drink("latte", "789", 1.5, 12, null);
+  private static final Drink DRINK_F = new Drink("cold brew", "789", 1.5, 12, null);
   private List<Drink> drinkList = new ArrayList<>();
   private static final double DELTA = .0000001;
   private String storeIdAB = "123";
@@ -52,14 +53,14 @@ public final class RecommendationEngineTest {
 
   @Test
   public void testGetBestShop() {
-    drinkList.add(DRINKA);
-    drinkList.add(DRINKB);
-    drinkList.add(DRINKC);
-    drinkList.add(DRINKD);
-    drinkList.add(DRINKE);
-    drinkList.add(DRINKF);
-    List<String> idList = new ArrayList<>();
-    idList = drinkList.stream().map(Drink::getStore).collect(Collectors.toList());
+    drinkList.add(DRINK_A);
+    drinkList.add(DRINK_B);
+    drinkList.add(DRINK_C);
+    drinkList.add(DRINK_D);
+    drinkList.add(DRINK_E);
+    drinkList.add(DRINK_F);
+    List<String> idList = drinkList.stream().map(Drink::getStore).collect(Collectors.toList());
+
     Assert.assertEquals(storeIdAB, RecommendationEngine.getBestShop(idList, "latte", drinkList));
     Assert.assertEquals(
         storeIdAB, RecommendationEngine.getBestShop(idList, "cold brew", drinkList));
@@ -68,23 +69,24 @@ public final class RecommendationEngineTest {
 
   @Test
   public void testGetScore() {
-    Assert.assertEquals(75.8, RecommendationEngine.getScore(DRINKA), DELTA);
-    Assert.assertEquals(75.8, RecommendationEngine.getScore(DRINKB), DELTA);
-    Assert.assertEquals(71.6, RecommendationEngine.getScore(DRINKC), DELTA);
-    Assert.assertEquals(71.6, RecommendationEngine.getScore(DRINKD), DELTA);
-    Assert.assertEquals(52.7, RecommendationEngine.getScore(DRINKE), DELTA);
-    Assert.assertEquals(52.7, RecommendationEngine.getScore(DRINKE), DELTA);
+    Assert.assertEquals(75.8, RecommendationEngine.getScore(DRINK_A), DELTA);
+    Assert.assertEquals(75.8, RecommendationEngine.getScore(DRINK_B), DELTA);
+    Assert.assertEquals(71.6, RecommendationEngine.getScore(DRINK_C), DELTA);
+    Assert.assertEquals(71.6, RecommendationEngine.getScore(DRINK_D), DELTA);
+    Assert.assertEquals(52.7, RecommendationEngine.getScore(DRINK_E), DELTA);
+    Assert.assertEquals(52.7, RecommendationEngine.getScore(DRINK_E), DELTA);
   }
 
   @Test
   public void testGetDrink() {
-    drinkList.add(DRINKA);
-    drinkList.add(DRINKB);
-    drinkList.add(DRINKC);
-    drinkList.add(DRINKD);
-    drinkList.add(DRINKE);
-    drinkList.add(DRINKF);
-    Assert.assertEquals(DRINKA, RecommendationEngine.getDrink(storeIdAB, "latte", drinkList).get());
+    drinkList.add(DRINK_A);
+    drinkList.add(DRINK_B);
+    drinkList.add(DRINK_C);
+    drinkList.add(DRINK_D);
+    drinkList.add(DRINK_E);
+    drinkList.add(DRINK_F);
+    Assert.assertEquals(
+        DRINK_A, RecommendationEngine.getDrink(storeIdAB, "latte", drinkList).get());
     drinkList.clear();
   }
 }
