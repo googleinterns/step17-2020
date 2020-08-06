@@ -27,12 +27,12 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public final class RecommendationEngineTest {
-  private Drink DRINKA = new Drink("latte", "123", 4.8, 12, null);
-  private Drink DRINKB = new Drink("cold brew", "123", 4.8, 12, null);
-  private Drink DRINKC = new Drink("latte", "456", 4.2, 12, null);
-  private Drink DRINKD = new Drink("cold brew", "456", 4.2, 12, null);
-  private Drink DRINKE = new Drink("latte", "789", 1.5, 12, null);
-  private Drink DRINKF = new Drink("cold brew", "789", 1.5, 12, null);
+  private final Drink DRINKA = new Drink("latte", "123", 4.8, 12, null);
+  private final Drink DRINKB = new Drink("cold brew", "123", 4.8, 12, null);
+  private final Drink DRINKC = new Drink("latte", "456", 4.2, 12, null);
+  private final Drink DRINKD = new Drink("cold brew", "456", 4.2, 12, null);
+  private final Drink DRINKE = new Drink("latte", "789", 1.5, 12, null);
+  private final Drink DRINKF = new Drink("cold brew", "789", 1.5, 12, null);
   private List<Drink> drinkList = new ArrayList<>();
   private static final double DELTA = .0000001;
   private String storeIdAB = "123";
