@@ -76,13 +76,11 @@ public class DrinkDAO {
 
   public static List<Drink> getDrinksByStore(String storeID) {
     Query query = new Query("Drink").addFilter("store", Query.FilterOperator.EQUAL, storeID);
-    List<Drink> drinksByStore = getDrinks(query);
-    return drinksByStore;
+    return getDrinks(query);
   }
 
   public static List<Drink> getDrinksByName(String name) {
     Query query = new Query("Drink").addFilter("name", Query.FilterOperator.EQUAL, name);
-    List<Drink> drinkByName = getDrinks(query);
-    return drinkByName;
+    return getDrinks(query);
   }
 }

@@ -8,17 +8,21 @@
     <script src="map.js"></script>
   </head>
   <body onload="createMap(); determineLogin();" id="background">
-    <nav id="navbar">
-        <a href="index.html" class="button">Home</a>
-        <a href="user.html" class="button">Profile</a>
-        <a href="store.html" id= "active" class="button">Explore</a>
-        <a href="search.html" class="button">Search for a drink!</a> 
-    </nav>
+
+  <nav id="navbar">
+   <a href="index.html"  class="button">Home</a>
+   <a href="user.html" class="button">Profile</a>
+   <a href="store.html" id="active" class="button">Explore</a>
+   <a href="order.html" class="button">Order</a> 
+   <a href="search.html" class="button">Search for a drink!</a> 
+  </nav>
+  
     <nav id="loginbar">
       <div id="form"></div>
       <div id="login-container"></div>
       <div id="email"></div>
     </nav>
+    
     <form id="search-container">
       <input type="text" placeholder="Place Enter A Zip Code Here.." id="zipcode">
       <input type="button" onclick="codeAddress();"/>
