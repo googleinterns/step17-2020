@@ -59,7 +59,7 @@ public class RecommendationEngine {
       }
     }
 
-    if (!highestScoredStore.equals("")) {
+    if (!highestScoredStore.isEmpty()) {
       return highestScoredStore;
     }
     return "No Results";
