@@ -37,10 +37,25 @@ public class RecommendServlet extends HttpServlet {
    * the user specified beverage from (via a weighting formula)
    */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String beverage = request.getParameter("beverageRequested");
-    System.out.println(beverage);
-    List<String> listStoreIds = new ArrayList<>();
+    response.setContentType("application/json");
+    String userInputBeverages = request.getParameter("beverageRequested");
+    String[] beverages = userInputBeverages.split(",");
+    HashMap<String, String> beverageToStoreId = new HashMap<String, String>();
+    List<String> listStoreIds = new ArrayList<>(); // todo: get this list from the places api
     List<Drink> drinkList = new ArrayList<>();
-    RecommendationEngine.getBestShop(listStoreIds, beverage, drinkList);
+
+    // adds all drinks from the storeid's we want into a list
+    for (String storeId : listStoreIds) {
+      for (Drink drink : DrinkDAO.getDrinksByStore(storeId)) {
+        drinkList.add(drink);
+      }
+    }
+
+    // puts the beverage into a hashmap which maps to its bestshop storeid
+    for (String beverage : beverages) {
+      beverage = beverage.trim();
+      beverageToStoreId.put(
+          beverage, RecommendationEngine.getBestShop(listStoreIds, beverage, drinkList));
+    }
   }
 }
