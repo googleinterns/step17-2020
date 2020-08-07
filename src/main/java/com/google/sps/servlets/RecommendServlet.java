@@ -46,7 +46,7 @@ public class RecommendServlet extends HttpServlet {
     List<Map<String, String>> coffeeShops =
         gson.fromJson(request.getParameter("coffeeshop"), ArrayList.class);
 
-    List<String> listStoreIds = new ArrayList<>(); // todo: get this list from the places api
+    List<String> listStoreIds = new ArrayList<>();
     List<Drink> drinkList = new ArrayList<>();
     HashMap<String, String> beverageToStoreId = new HashMap<>();
 
