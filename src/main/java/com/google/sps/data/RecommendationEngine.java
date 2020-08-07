@@ -46,7 +46,7 @@ public class RecommendationEngine {
     }
     return (commentScore + ratingScore + distanceScore);
   }
-  // this function returns the highest scored store from a list of stores
+  // this function returns the highest scored storeid from a list of stores
   public static String getBestShop(
       List<String> listStoreIds, String inputBeverage, List<Drink> drinkList) {
     double bestScore = 0.0;
