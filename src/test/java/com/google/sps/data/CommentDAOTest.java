@@ -55,7 +55,8 @@ public final class CommentDAOTest {
 
   @Test
   public void testGetCommentByID() {
-    Comment commentA = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    Comment commentA =
+        CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A, null);
     Comment commentFromDB = CommentDAO.getCommentByID(commentA.getId());
     Assert.assertEquals(commentA.getRating(), commentFromDB.getRating());
     Assert.assertEquals(commentA.getDrink(), commentFromDB.getDrink());
@@ -64,10 +65,14 @@ public final class CommentDAOTest {
 
   @Test
   public void testGetCommentByStore() {
-    Comment commentA = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
-    Comment commentB = CommentDAO.storeComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_A);
-    Comment commentC = CommentDAO.storeComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A);
-    Comment commentD = CommentDAO.storeComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A);
+    Comment commentA =
+        CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A, null);
+    Comment commentB =
+        CommentDAO.storeComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_A, null);
+    Comment commentC =
+        CommentDAO.storeComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A, null);
+    Comment commentD =
+        CommentDAO.storeComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_A, null);
     List<Comment> comments = CommentDAO.getCommentByStore(STORE_A);
     Assert.assertEquals(comments.size(), 2);
     for (Comment comment : comments) {
@@ -77,9 +82,12 @@ public final class CommentDAOTest {
 
   @Test
   public void testGetCommentByEmail() {
-    Comment commentA = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
-    Comment commentB = CommentDAO.storeComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_B);
-    Comment commentC = CommentDAO.storeComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_B);
+    Comment commentA =
+        CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A, null);
+    Comment commentB =
+        CommentDAO.storeComment(RATING_B, DRINK_B, CONTENT_B, STORE_A, EMAIL_B, null);
+    Comment commentC =
+        CommentDAO.storeComment(RATING_C, DRINK_C, CONTENT_C, STORE_C, EMAIL_B, null);
     List<Comment> comments = CommentDAO.getCommentByEmail(EMAIL_B);
     Assert.assertEquals(comments.size(), 2);
     for (Comment comment : comments) {
@@ -89,8 +97,10 @@ public final class CommentDAOTest {
 
   @Test
   public void testGetCommentWithDuplicateComment() {
-    Comment commentA = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
-    Comment commentB = CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A);
+    Comment commentA =
+        CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A, null);
+    Comment commentB =
+        CommentDAO.storeComment(RATING_A, DRINK_A, CONTENT_A, STORE_A, EMAIL_A, null);
     List<Comment> commentByStore = CommentDAO.getCommentByStore(STORE_A);
     Assert.assertEquals(commentByStore.size(), 2);
     for (Comment comment : commentByStore) {
