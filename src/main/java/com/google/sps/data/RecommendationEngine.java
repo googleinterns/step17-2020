@@ -9,7 +9,10 @@ import java.util.Optional;
 public class RecommendationEngine {
 
   public static Optional<Drink> getDrink(String storeId, String drinkName, List<Drink> drinkList) {
-    return drinkList.stream().filter(drink -> drink.getName().equals(drinkName)).findFirst();
+    return drinkList.stream()
+        .filter(drink -> drink.getName().equals(drinkName))
+        .filter(drink -> drink.getStore().equals(storeId))
+        .findFirst();
   }
   // given a coffeeshop, return its TYDRecommended score
   public static double getScore(Drink drink) {
@@ -41,7 +44,6 @@ public class RecommendationEngine {
     } else {
       distanceScore = 35 - timeMinutes;
     }
-
     return (commentScore + ratingScore + distanceScore);
   }
   // this function returns the highest scored store from a list of stores
@@ -54,7 +56,7 @@ public class RecommendationEngine {
       if (drink.isPresent()) {
         double currentShopScore = getScore(drink.get());
         if (currentShopScore > bestScore) {
-          highestScoredStore = storeId;
+          highestScoredStore = drink.get().getStore();
           bestScore = currentShopScore;
         }
       }
