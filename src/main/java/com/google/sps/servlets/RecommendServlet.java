@@ -37,10 +37,15 @@ public class RecommendServlet extends HttpServlet {
    * the user specified beverage from (via a weighting formula)
    */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String beverage = request.getParameter("beverageRequested");
-    System.out.println(beverage);
+    String userInputBeverages = request.getParameter("beverageRequested");
+    String[] beverages = userInputBeverages.split(",");
     List<String> listStoreIds = new ArrayList<>();
-    List<Drink> drinkList = new ArrayList<>();
-    RecommendationEngine.getBestShop(listStoreIds, beverage, drinkList);
+    for (String beverage : beverages) {
+      for (String storeId : listStoreIds) {
+        List<Drink> drinkList = DrinkDAO.getDrinksByStore(storeId);
+        System.out.println(
+            RecommendationEngine.getBestShop(listStoreIds, beverage.trim(), drinkList));
+      }
+    }
   }
 }
