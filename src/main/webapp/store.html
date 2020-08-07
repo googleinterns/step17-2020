@@ -8,13 +8,14 @@
     <script src="map.js"></script>
   </head>
   <body onload="createMap(); determineLogin();" id="background">
-    <nav id="navbar">
-        <a href="index.html" class="button">Home</a>
-        <a href="user.html" class="button">Profile</a>
-        <a href="store.html" id= "active" class="button">Explore</a>
-        <a href="search.html" class="button">Search for a drink!</a> 
-        <a href="order.html" class="button">Order</a> 
-    </nav>
+  <nav id="navbar">
+   <a href="index.html"  class="button">Home</a>
+   <a href="user.html" class="button">Profile</a>
+   <a href="store.html" id="active" class="button">Explore</a>
+   <a href="search.html" class="button">Search for a drink!</a> 
+   <a href="order.html" class="button">Order</a> 
+  </nav>
+  
     <nav id="loginbar">
       <div id="form"></div>
       <div id="login-container"></div>
@@ -23,7 +24,7 @@
     
     <form id="search-container">
       <input type="text" placeholder="Place Enter A Zip Code Here.." id="zipcode">
-      <input type="button" onclick="codeAddress();"/>
+      <input type="button" onclick="getCoffeeShopByZipcode();"/>
     </form>
     <div id="map"></div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-3acBoJ17cFd3-8vYCyKTeYT5cVtfHfI&libraries=places"async defer></script>
