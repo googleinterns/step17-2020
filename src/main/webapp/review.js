@@ -75,17 +75,6 @@ function addDrinkToChart(drink) {
   ratingMap[drink.rating]++;
 }
 
-/** Creates an <li> element containing text. */
-function createListElement(drink) {
-  const ratingElement = document.createElement('li');
-  ratingElement.className = 'drink';
-
-  const drinkElement = document.createElement('span');
-  drinkElement.innerText = drink.email+ ", " +drink.drink + ", " + drink.rating + "/5, " + drink.content;
-
-  ratingElement.appendChild(drinkElement);
-  return ratingElement;
-}
 
 function processComment() {
   fetch('/get-login-info').then(response => response.json()).then((isLoggedIn) => {
@@ -97,6 +86,7 @@ function processComment() {
         storeComment(email);
         updateChart();
         drawChart();
+        location.reload();
       }).catch(error => {
         console.error('There has been a problem with get-email:', error);
       });
