@@ -1,3 +1,5 @@
+var coffeeShopInfo=[];
+var userPos;
 /*
     These functions are strictly being used for the user's profile
     to ensure the associated store is being displayed rather than the user's
@@ -147,12 +149,4 @@ function displayUsername() {
   }).catch(error => {
     console.error('There has been a problem with your operation:', error);
   });
-}
-
-function getBeverage() {
-    var beverage = document.getElementById("beverageRequested").value;
-    var params = new URLSearchParams();
-    params.append('beverageRequested', beverage);
-    fetch('/recommend', {method: 'POST', body: params}).catch(e => {console.log(e)});
-
 }

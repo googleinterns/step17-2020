@@ -14,6 +14,7 @@
 
 package com.google.sps.servlets;
 
+import com.google.gson.Gson;
 import com.google.sps.data.*;
 import java.io.IOException;
 import java.util.*;
@@ -38,15 +39,21 @@ public class RecommendServlet extends HttpServlet {
    */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
+    Gson gson = new Gson();
+
     String userInputBeverages = request.getParameter("beverageRequested");
     String[] beverages = userInputBeverages.split(",");
-    HashMap<String, String> beverageToStoreId = new HashMap<String, String>();
-    List<String> listStoreIds = new ArrayList<>(); // todo: get this list from the places api
+    List<Map<String, String>> coffeeShops =
+        gson.fromJson(request.getParameter("coffeeshop"), ArrayList.class);
+
+    List<String> listStoreIds = new ArrayList<>();
     List<Drink> drinkList = new ArrayList<>();
+    HashMap<String, String> beverageToStoreId = new HashMap<>();
 
     // adds all drinks from the storeid's we want into a list
-    for (String storeId : listStoreIds) {
-      for (Drink drink : DrinkDAO.getDrinksByStore(storeId)) {
+    for (Map<String, String> storeToId : coffeeShops) {
+      for (Drink drink : DrinkDAO.getDrinksByStore(storeToId.get("store"))) {
+        listStoreIds.add(storeToId.get("store"));
         drinkList.add(drink);
       }
     }
@@ -57,5 +64,11 @@ public class RecommendServlet extends HttpServlet {
       beverageToStoreId.put(
           beverage, RecommendationEngine.getBestShop(listStoreIds, beverage, drinkList));
     }
+
+    StringBuilder jsonBuilder = new StringBuilder();
+    beverageToStoreId.forEach(
+        (key, value) ->
+            jsonBuilder.append("Your " + key + " is coming from store: " + value).append("\n"));
+    response.getWriter().println(gson.toJson(jsonBuilder.toString()));
   }
 }

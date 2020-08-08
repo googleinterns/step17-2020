@@ -249,3 +249,32 @@ function createListElement(store) {
   listElement.appendChild(storeElement);
   return listElement;
 }
+
+function test(store) {
+ const listElement = document.createElement('li');
+  listElement.className = 'store';
+  const storeElement = document.createElement('span');
+  storeElement.innerText = store;
+  listElement.appendChild(storeElement);
+  return listElement;
+
+}
+
+function getBeverage() {
+    var beverage = document.getElementById("beverageRequested").value;
+    var params = new URLSearchParams();
+    params.append('beverageRequested', beverage);
+    params.append('coffeeshop', JSON.stringify(coffeeShopInfo));
+    document.getElementById("store-list").innerHTML = "";
+
+fetch('/recommend', {method: 'POST', body: params}).then(
+    function(stores) {
+    return stores.json();
+  }).then(function(stores) {
+    const ratingListElement = document.getElementById('store-list');
+      ratingListElement.appendChild(test(stores));
+  }).catch(e => {
+    console.log(e)
+  });
+
+}

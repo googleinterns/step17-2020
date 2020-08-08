@@ -5,8 +5,10 @@
     <title>TYD Order</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <script src="map.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj0YQe0JSmIy5VlZeR-Mcknz3w49g80Q4&libraries=places"async defer></script>
   </head>
-  <body onload="determineLogin()" id= "background">
+  <body onload="getUserLocation(); determineLogin()" id= "background">
 
 <nav id="navbar">
    <a href="index.html" class="button">Home</a>
@@ -24,14 +26,18 @@
     <div>Welcome to TYD Coffee's order page! Go</div> 
     <div>ahead and search for drinks and we'll pick our</div>
     <div>recommended stores for you. When you're</div>
-    <div>done ordering, press submit order</div>
+    <div>done ordering, press submit!</div>
+        <div> if you're not seeing anything here, </div>
+        <div> there probably arent reviews made nearby you </div>
+        <div> Go to the explore tab to leave a review!</div>
 
     <div> Enter Beverage: </div>
     <form>
     <textarea id= "beverageRequested"></textarea>
-    <button onclick="getBeverage()">Submit</button>
+    <input type="button" value="Submit" onclick="getBeverage();">
     </form>
     <br><br> 
+    <ol id="store-list"></ol>
   </body>
 </html>
 
