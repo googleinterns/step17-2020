@@ -57,15 +57,10 @@ function createListElementUser(drink) {
   ratingElement.className = 'drink';
 
   const drinkElement = document.createElement('span');
-  var store = idToStore(drink.store)
-  drinkElement.innerText = store +", "+drink.drink + ", " + drink.rating + "/5, " + drink.content;
+  drinkElement.innerText = drink.storeInfo +", "+drink.drink + ", " + drink.rating + "/5, " + drink.content;
 
   ratingElement.appendChild(drinkElement);
   return ratingElement;
-}
-/**This function turns the store id into a readable store */
-function idToStore(storeId){
-    return storeId;
 }
 
 //end of user's profile functions

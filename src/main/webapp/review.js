@@ -100,6 +100,7 @@ function processComment() {
 function storeComment(email) {
   var drink = document.getElementById("drink").value;
   var content = document.getElementById("content").value;
+  var storeInfo= localStorage.getItem("shopName") + " " + localStorage.getItem("address");
   var params = new URLSearchParams();
   params.append('drink', drink);
   var rating = document.getElementById("rating");
@@ -107,6 +108,7 @@ function storeComment(email) {
   params.append('content', content);
   params.append('store', localStorage.getItem("store"));
   params.append('email', email);
+  params.append('storeInfo', storeInfo);
   fetch('/comment', {method: 'POST', body: params}).catch(e => {
     console.log(e)
   });

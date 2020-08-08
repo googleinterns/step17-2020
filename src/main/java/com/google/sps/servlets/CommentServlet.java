@@ -55,8 +55,9 @@ public class CommentServlet extends HttpServlet {
     String content = request.getParameter("content");
     String store = request.getParameter("store");
     String email = request.getParameter("email");
+    String storeInfo = request.getParameter("storeInfo");
 
-    CommentDAO.storeComment(rating, drink, content, store, email);
+    CommentDAO.storeComment(rating, drink, content, store, email, storeInfo);
     DrinkDAO.saveDrink(drink, (double) rating, store);
   }
 }
